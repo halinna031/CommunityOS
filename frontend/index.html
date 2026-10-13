@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CommunityOS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#edf1f0; --card:#fff; --ink:#12242b; --muted:#53666d; --line:#c9d3d6;
+  --blue:#1646b8; --blue-soft:#e3ebfb; --yellow:#f5b700; --yellow-soft:#fff4cc;
+  --green:#14774a; --green-soft:#dff3e8; --amber:#8a5200; --red:#b3261e; --red-soft:#fbe4e2;
+  --radius:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root{--ground:#0f1a1f; --card:#17262d; --ink:#e8f0f2; --muted:#9db0b7; --line:#2c4049;
+    --blue:#7da2ff; --blue-soft:#1b2c52; --yellow-soft:#3a3010; --green:#5fd39b; --green-soft:#123a29;
+    --amber:#f0b45a; --red:#ff8a80; --red-soft:#431d1b;}
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  padding-top:env(safe-area-inset-top,0)}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;line-height:1.15;margin:0}
+a{color:var(--blue)}
+button,select,textarea,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+
+.topbar{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--card)}
+.logo{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:20px;letter-spacing:-.01em}
+.logo i{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--yellow);margin-right:8px;vertical-align:-1px;box-shadow:0 0 0 3px var(--blue-soft)}
+.topbar .sp{flex:1}
+.topbar button,.topbar a,.topbar select{font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);text-decoration:none;color:var(--ink);cursor:pointer}
+.sample{background:var(--yellow-soft);color:var(--ink);padding:8px 20px;font-size:14px;border-bottom:1px solid var(--line)}
+
+.layout{display:grid;grid-template-columns:minmax(0,600px) minmax(0,1fr);gap:20px;padding:20px;max-width:1400px;margin:0 auto;align-items:start}
+.map-col{position:sticky;top:16px}
+#map{height:calc(100vh - 140px);min-height:360px;border-radius:var(--radius);border:1px solid var(--line);background:var(--blue-soft)}
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;padding:14px}
+  .map-col{position:static;order:2} #map{height:340px}
+}
+@media (max-width:560px){
+  .topbar{gap:8px;padding:10px 12px} #region{display:none} #regionSelect{max-width:145px}
+}
+
+.ask h1{font-size:clamp(26px,4vw,34px);margin:6px 0 12px;letter-spacing:-.02em}
+.ask textarea{width:100%;min-height:84px;padding:14px;border:2px solid var(--ink);border-radius:var(--radius);background:var(--card);resize:vertical}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.primary{background:var(--blue);color:#fff;border:0;padding:11px 20px;border-radius:var(--radius);font-weight:600;cursor:pointer}
+@media (prefers-color-scheme:dark){.primary{color:#0f1a1f}}
+.primary:disabled{opacity:.6;cursor:wait}
+.ghost{background:transparent;border:1px solid var(--line);padding:9px 12px;border-radius:var(--radius);cursor:pointer}
+.region-select{padding:9px 12px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card);min-width:170px}
+.ghost[aria-pressed=true]{background:var(--blue-soft);border-color:var(--blue)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 12px;font-size:14px;cursor:pointer}
+.chip:hover{border-color:var(--blue)}
+
+.understood{margin:18px 0 6px;font-size:14px;color:var(--muted)}
+.tag{display:inline-block;background:var(--blue-soft);color:var(--ink);border-radius:6px;padding:2px 8px;margin:2px 4px 2px 0;font-size:13px}
+.notice{border-radius:var(--radius);padding:12px 14px;margin:12px 0;font-size:15px;border:1px solid var(--line);background:var(--card)}
+.notice.emerg{background:var(--red-soft);border-color:var(--red)}
+.notice.emerg ul{margin:6px 0 0;padding-left:20px}
+.notice.relax{background:var(--yellow-soft);border-color:var(--yellow)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin:14px 0;transition:border-color .15s, box-shadow .15s}
+.card.hl{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+.card.review{border-left:6px solid var(--yellow)}
+.head{display:flex;gap:12px;align-items:flex-start}
+.rank{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--card);display:grid;place-items:center;font-weight:700;font-family:"Bricolage Grotesque",sans-serif}
+.head h2{font-size:20px}
+.sub{color:var(--muted);font-size:14px;margin-top:2px}
+.pill{display:inline-block;font-size:13px;border-radius:999px;padding:1px 10px;margin-left:6px;vertical-align:2px}
+.pill.open{background:var(--green-soft);color:var(--green)} .pill.closed{background:var(--red-soft);color:var(--red)} .pill.unk{background:var(--yellow-soft);color:var(--amber)}
+.score{margin-left:auto;text-align:right;flex:none}
+.score b{font-family:"Bricolage Grotesque",sans-serif;font-size:26px}
+.score small{display:block;color:var(--muted);font-size:12px}
+.summary{margin:12px 0 8px}
+.sigs{list-style:none;margin:0;padding:0;display:grid;gap:3px;font-size:15px}
+.sigs li{display:flex;gap:8px}
+.sigs .ic{flex:none;width:18px;text-align:center;font-weight:700}
+.sigs .ok .ic{color:var(--green)} .sigs .warn .ic{color:var(--amber)} .sigs .bad .ic{color:var(--red)} .sigs .info .ic{color:var(--muted)}
+
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--line);margin:14px 0 4px}
+.bar span{display:block;height:100%}
+details{margin-top:8px;font-size:14px}
+summary{cursor:pointer;color:var(--blue);padding:2px 0}
+.bd{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;margin-top:6px}
+.bd .sw{width:12px;height:12px;border-radius:3px}
+.hours{border-collapse:collapse;margin-top:6px} .hours td{padding:1px 14px 1px 0;vertical-align:top}
+.facts{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;margin-top:10px;color:var(--muted)}
+.src{font-size:13px;color:var(--muted);margin-top:10px;display:flex;gap:6px 14px;flex-wrap:wrap;align-items:center}
+.reportbox{margin-top:10px;padding:12px;border:1px dashed var(--line);border-radius:var(--radius);display:grid;gap:8px}
+.reportbox select,.reportbox input{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.linkbtn{background:none;border:0;color:var(--blue);text-decoration:underline;cursor:pointer;padding:0;font-size:13px}
+.empty{color:var(--muted);padding:30px 0}
+.pin{background:var(--ink);color:var(--card);border:2px solid var(--yellow);border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-weight:700;font-size:13px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><i></i>CommunityOS</div>
+  <span id="region" style="color:var(--muted);font-size:14px"></span>
+  <div class="sp"></div>
+  <select id="regionSelect" aria-label="Region"></select>
+  <button id="langBtn" aria-label="Switch language">EN</button>
+  <a href="/admin" id="adminLink"></a>
+</div>
+<div class="sample" id="sampleBanner" hidden></div>
+
+<div class="layout">
+  <main>
+    <section class="ask">
+      <h1 id="h1"></h1>
+      <textarea id="q" maxlength="500" aria-label="request"></textarea>
+      <div class="row">
+        <button class="primary" id="go"></button>
+        <button class="ghost" id="locBtn" aria-pressed="false"></button>
+      </div>
+      <div class="chips" id="chips"></div>
+    </section>
+    <div id="out" aria-live="polite"></div>
+  </main>
+  <aside class="map-col"><div id="map" role="img" aria-label="map"></div></aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+/* ------------------------------------------------------------------ i18n */
+const T = {
+ zh:{region:"按地区查找社区资源",h1:"说说你的情况，我来找地方",ph:"例如：我有一张旧沙发想捐掉 / 哪里有免费辅导 / 我需要安静的自习地方",
+  go:"查找资源",going:"查找中…",loc:"使用我的位置",locOn:"已使用位置",admin:"管理页",
+  sample:"当前为示例数据（机构为虚构），用于演示。上线前请替换为已核实的真实资源。",
+  understood:"我们的理解",none:"没有找到可靠匹配",cat:{food_assistance:"食物援助",donation:"物品捐赠",learning:"免费学习/辅导",study_space:"自习空间"},
+  cons:{free:"免费",open_now:"现在营业",open_24h:"24小时开放",no_id:"无需证件",no_appointment:"无需预约",near_campus:"靠近校园"},
+  id:{students:"学生",newcomers:"新移民",low_income:"低收入",seniors:"老年人"},
+  relaxNeeds:"没有完全符合的结果，已放宽条件，显示同类资源。请留意每张卡片上的提醒。",
+  relaxCons:c=>`没有同时满足所有要求的结果，已放宽：${c}。`,
+  emerg:"紧急信息",score:"匹配分",breakdown:"打分明细",hours:"营业时间",days:["周一","周二","周三","周四","周五","周六","周日"],
+  closedDay:"休息",appt:"需预约",walk:"免预约",idreq:"需证件",free:"免费",fee:"收费",lang:"语言",verified:"核实于",source:"信息来源",
+  call:"致电",report:"信息有误？反馈",reportWhy:"哪里不对？",send:"提交反馈",cancel:"取消",note:"补充说明（可选）",
+  reasons:{closed:"已关门/停止服务",hours_changed:"营业时间变了",items_changed:"不再接收/提供该项",wrong_address:"地址错误",other:"其他"},
+  thanks:n=>`已收到，谢谢！目前有 ${n} 条未处理的反馈。`,dup:"你已反馈过这条信息，我们会尽快核实。",
+  review:n=>`${n} 位用户反馈这条信息可能已过时，排名已降低，等待核实。`,conf:"可信度",
+  comp:{match:"需求匹配",eligibility:"资格",distance:"距离",open:"营业状态",freshness:"信息新鲜度",barrier:"使用门槛"},
+  pts:"分",err:"出错了，请稍后重试。",km:"km"},
+ en:{region:"Find community resources by region",h1:"Tell us what you need, we'll find the place",ph:"e.g. I want to donate an old sofa / where can I get free tutoring / I need a quiet place to study",
+  go:"Find resources",going:"Searching…",loc:"Use my location",locOn:"Using location",admin:"Admin",
+  sample:"Showing sample data (organizations are fictional) for demo purposes. Replace with verified listings before launch.",
+  understood:"What we understood",none:"No reliable match found",cat:{food_assistance:"Food assistance",donation:"Donations",learning:"Free learning help",study_space:"Study spaces"},
+  cons:{free:"free",open_now:"open now",open_24h:"open 24h",no_id:"no ID",no_appointment:"no appointment",near_campus:"near campus"},
+  id:{students:"student",newcomers:"newcomer",low_income:"low income",seniors:"senior"},
+  relaxNeeds:"No exact match, so we widened the search to similar resources. Check the notes on each card.",
+  relaxCons:c=>`Nothing met every request, so we relaxed: ${c}.`,
+  emerg:"Urgent help",score:"Match",breakdown:"Score breakdown",hours:"Hours",days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+  closedDay:"Closed",appt:"Appointment",walk:"Walk-in",idreq:"ID needed",free:"Free",fee:"Fee",lang:"Languages",verified:"Verified",source:"Source",
+  call:"Call",report:"Something wrong? Report",reportWhy:"What's wrong?",send:"Send report",cancel:"Cancel",note:"Details (optional)",
+  reasons:{closed:"Closed / no longer operating",hours_changed:"Hours changed",items_changed:"No longer accepts/offers this",wrong_address:"Wrong address",other:"Other"},
+  thanks:n=>`Thanks! ${n} open report(s) on this listing now.`,dup:"You already reported this one. We'll verify it soon.",
+  review:n=>`${n} people say this may be outdated. Ranked lower until verified.`,conf:"Confidence",
+  comp:{match:"Need match",eligibility:"Eligibility",distance:"Distance",open:"Open status",freshness:"Freshness",barrier:"Barriers"},
+  pts:"pts",err:"Something went wrong. Please try again.",km:"km"}
+};
+const EXAMPLES = {zh:["我有一张旧沙发想捐掉","旧笔记本电脑怎么捐","哪里有免费的数学辅导","我刚来加拿大，需要清真食物","安静的自习的地方，晚上也开"],
+  en:["I need somewhere to donate furniture","I have an old laptop to donate","Free tutoring for calculus, open now","I'm a student short on groceries near campus","A quiet place to study"]};
+const COLORS = {match:"#1646b8",eligibility:"#5b87e6",distance:"#2a9d8f",open:"#8fd3b0",freshness:"#f5b700",barrier:"#b8c4c8"};
+const ICON = {ok:"✓",warn:"!",bad:"✕",info:"i"};
+
+let lang = (navigator.language||"zh").startsWith("zh") ? "zh" : "en";
+let useLoc = false, loc = null, map = null, markers = {}, lastData = null;
+let regions = [], selectedRegion = "waterloo_region";
+let clientId = "";
+try{ clientId = localStorage.getItem("cid") || (crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)); localStorage.setItem("cid",clientId);}catch(e){ clientId = String(Math.random()).slice(2); }
+
+const $ = s => document.querySelector(s);
+const t = () => T[lang];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  $("#region").textContent = t().region; $("#h1").textContent = t().h1; $("#q").placeholder = t().ph;
+  $("#go").textContent = t().go; $("#locBtn").textContent = useLoc ? t().locOn : t().loc;
+  $("#langBtn").textContent = lang==="zh" ? "EN" : "中文"; $("#adminLink").textContent = t().admin;
+  $("#chips").innerHTML = EXAMPLES[lang].map(x=>`<button class="chip" type="button">${esc(x)}</button>`).join("");
+  $("#chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ $("#q").value=b.textContent; search(); });
+  $("#sampleBanner").textContent = t().sample;
+  renderRegionOptions();
+  if(lastData) render(lastData);
+}
+$("#langBtn").onclick = ()=>{ lang = lang==="zh"?"en":"zh"; applyLang(); };
+$("#locBtn").onclick = ()=>{
+  if(useLoc){ useLoc=false; loc=null; $("#locBtn").setAttribute("aria-pressed","false"); return applyLang(); }
+  navigator.geolocation?.getCurrentPosition(p=>{ loc={lat:p.coords.latitude,lng:p.coords.longitude}; useLoc=true;
+    $("#locBtn").setAttribute("aria-pressed","true"); applyLang(); }, ()=>{}, {timeout:8000});
+};
+$("#go").onclick = search;
+$("#q").addEventListener("keydown", e=>{ if(e.key==="Enter" && (e.metaKey||e.ctrlKey)) search(); });
+
+/* ------------------------------------------------------------------ search */
+async function search(){
+  const q = $("#q").value.trim(); if(!q) return;
+  $("#go").disabled = true; $("#go").textContent = t().going;
+  try{
+    const r = await fetch("/api/search",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({query:q, lat:loc?.lat ?? null, lng:loc?.lng ?? null, region_id:selectedRegion})});
+    if(!r.ok) throw new Error((await r.json()).detail || r.status);
+    lastData = await r.json();
+    lang = lastData.intent.language; applyLang();   // answer in the language the user wrote
+  }catch(e){ $("#out").innerHTML = `<div class="notice emerg">${esc(t().err)} ${esc(e.message)}</div>`; }
+  finally{ $("#go").disabled=false; $("#go").textContent=t().go; }
+}
+
+function render(d){
+  const i = d.intent, tt = t();
+  const tags = [];
+  if(i.category) tags.push(tt.cat[i.category]);
+  (i.needs||[]).forEach(n=>tags.push(n));
+  Object.entries(i.constraints).filter(([,v])=>v).forEach(([k])=>tags.push(tt.cons[k]));
+  (i.identity||[]).forEach(x=>tags.push(tt.id[x]));
+  let html = `<div class="understood">${esc(tt.understood)}：${tags.map(x=>`<span class="tag">${esc(x)}</span>`).join("") || "—"}</div>`;
+  if(d.emergency) html += `<div class="notice emerg"><b>${esc(tt.emerg)}：${esc(d.emergency.title)}</b><ul>${d.emergency.lines.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`;
+  d.relaxed.forEach(x=>{ html += `<div class="notice relax">${x==="needs"?esc(tt.relaxNeeds):esc(tt.relaxCons(x.split(":")[1].split(",").map(c=>tt.cons[c]||c).join(", ")))}</div>`; });
+  if(d.fallback) html += `<div class="notice"><b>${esc(tt.none)}</b><br>${esc(d.fallback)}</div>`;
+  html += d.results.map(card).join("");
+  $("#out").innerHTML = html;
+  bindCards(d);
+  drawMap(d.results);
+}
+
+function card(r){
+  const tt = t(), st = r.open_status;
+  const pill = st.is_open===true ? `<span class="pill open">${lang==="zh"?"营业中":"Open"}</span>` :
+               st.is_open===false ? `<span class="pill closed">${lang==="zh"?"未营业":"Closed"}</span>` : `<span class="pill unk">${lang==="zh"?"需确认":"Check"}</span>`;
+  const bar = Object.keys(COLORS).map(k=>`<span title="${esc(tt.comp[k])} ${r.weighted[k]}" style="width:${r.weighted[k]}%;background:${COLORS[k]}"></span>`).join("");
+  const bd = Object.keys(COLORS).map(k=>`<span class="sw" style="background:${COLORS[k]}"></span><span>${esc(tt.comp[k])} (${Math.round(r.weights[k]*100)}%)</span><b>${r.weighted[k]} ${esc(tt.pts)}</b>`).join("");
+  const hrs = r.hours_table.map((h,ix)=>`<tr><td>${tt.days[ix]}</td><td>${h.ranges.length?esc(h.ranges.join(", ")):`<span style="color:var(--muted)">${tt.closedDay}</span>`}</td></tr>`).join("");
+  const sigs = r.signals.map(s=>`<li class="${s.level}"><span class="ic" aria-hidden="true">${ICON[s.level]}</span><span>${esc(s.text)}</span></li>`).join("");
+  const facts = [
+    r.requires_appointment ? tt.appt : tt.walk, r.requires_id ? tt.idreq : null, r.fee_cad>0 ? `${tt.fee} $${r.fee_cad}` : tt.free,
+    r.languages.length ? `${tt.lang}: ${r.languages.join(", ")}` : null].filter(Boolean).map(esc).join(" · ");
+  const review = r.needs_review ? `<div class="notice relax" style="margin:10px 0 0">${esc(tt.review(r.open_reports))}</div>` : "";
+  return `<article class="card ${r.needs_review?"review":""}" id="card-${r.id}" data-id="${r.id}">
+    <div class="head"><div class="rank">${r.rank}</div>
+      <div><h2>${esc(r.name)}${pill}</h2><div class="sub">${esc(r.address)}</div></div>
+      <div class="score"><b>${r.score}</b><small>${esc(tt.score)}</small></div></div>
+    <p class="summary">${esc(r.summary)}</p>
+    <ul class="sigs">${sigs}</ul>
+    <div class="bar" role="img" aria-label="${esc(tt.breakdown)}">${bar}</div>
+    <details><summary>${esc(tt.breakdown)}</summary><div class="bd">${bd}</div></details>
+    <details><summary>${esc(tt.hours)}</summary><table class="hours">${hrs}</table></details>
+    <p style="margin:10px 0 0;font-size:15px">${esc(r.description)}</p>
+    <div class="facts">${facts}</div>
+    ${review}
+    <div class="src">
+      <span>${esc(tt.verified)} ${esc((r.last_verified_at||"").slice(0,10))} · ${esc(tt.conf)} ${Math.round(r.confidence*100)}%</span>
+      ${r.phone?`<a href="tel:${esc(r.phone)}">${esc(tt.call)} ${esc(r.phone)}</a>`:""}
+      <a href="${esc(r.source_url)}" target="_blank" rel="noopener">${esc(tt.source)}</a>
+      <button class="linkbtn" data-report="${r.id}">${esc(tt.report)}</button>
+    </div>
+    <div data-rbox="${r.id}"></div>
+  </article>`;
+}
+
+function bindCards(d){
+  document.querySelectorAll("[data-report]").forEach(b=>b.onclick=()=>openReport(b.dataset.report));
+  document.querySelectorAll(".card").forEach(c=>{
+    c.onmouseenter=()=>hl(c.dataset.id,true); c.onmouseleave=()=>hl(c.dataset.id,false);
+  });
+}
+function hl(id,on){ document.getElementById("card-"+id)?.classList.toggle("hl",on); }
+
+/* ------------------------------------------------------------------ reporting */
+function openReport(id){
+  const tt = t(), box = document.querySelector(`[data-rbox="${id}"]`);
+  if(box.innerHTML){ box.innerHTML=""; return; }
+  box.innerHTML = `<div class="reportbox"><label>${esc(tt.reportWhy)}
+      <select>${Object.entries(tt.reasons).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join("")}</select></label>
+    <input maxlength="300" placeholder="${esc(tt.note)}">
+    <div class="row" style="margin:0"><button class="primary" type="button">${esc(tt.send)}</button>
+    <button class="ghost" type="button">${esc(tt.cancel)}</button><span class="msg" aria-live="polite"></span></div></div>`;
+  const [send, cancel] = box.querySelectorAll("button"), msg = box.querySelector(".msg");
+  cancel.onclick = ()=>box.innerHTML="";
+  send.onclick = async ()=>{
+    send.disabled = true;
+    try{
+      const r = await fetch("/api/report",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({resource_id:id,reason:box.querySelector("select").value,note:box.querySelector("input").value,client_id:clientId})});
+      const j = await r.json(); if(!r.ok) throw new Error(j.detail);
+      msg.textContent = j.duplicate ? tt.dup : tt.thanks(j.open_reports);
+      setTimeout(search, 1600);  // re-rank live: the card sinks / gets flagged
+    }catch(e){ msg.textContent = tt.err; send.disabled=false; }
+  };
+}
+
+/* ------------------------------------------------------------------ map */
+function drawMap(results){
+  if(typeof L === "undefined") return;
+  const selected = regions.find(r=>r.id===selectedRegion);
+  const center = selected?.center || [43.4516,-80.4925];
+  if(!map){
+    map = L.map("map").setView(center, selectedRegion==="waterloo_region"?11:13);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
+  } else if(!results.length) map.setView(center, selectedRegion==="waterloo_region"?11:13);
+  Object.values(markers).forEach(m=>m.remove()); markers = {};
+  results.filter(r=>r.lat!==null && r.lng!==null && Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lng))).forEach(r=>{
+    const m = L.marker([r.lat,r.lng],{icon:L.divIcon({className:"",html:`<div class="pin">${r.rank}</div>`,iconSize:[28,28],iconAnchor:[14,14]})}).addTo(map);
+    m.bindTooltip(r.name); m.on("click",()=>{ document.getElementById("card-"+r.id)?.scrollIntoView({behavior:"smooth",block:"center"}); hl(r.id,true); setTimeout(()=>hl(r.id,false),1500); });
+    m.on("mouseover",()=>hl(r.id,true)); m.on("mouseout",()=>hl(r.id,false));
+    markers[r.id] = m;
+  });
+  if(Object.keys(markers).length) map.fitBounds(L.featureGroup(Object.values(markers)).getBounds().pad(0.3),{maxZoom:14});
+  else map.setView(center, selectedRegion==="waterloo_region"?11:13);
+  setTimeout(()=>map.invalidateSize(),50);
+}
+
+function renderRegionOptions(){
+  const select = $("#regionSelect");
+  if(!select || !regions.length) return;
+  const wanted = selectedRegion;
+  select.innerHTML = regions.map(r=>`<option value="${esc(r.id)}">${esc(r.names?.[lang] || r.id)}</option>`).join("");
+  if(regions.some(r=>r.id===wanted)) select.value=wanted;
+}
+$("#regionSelect").addEventListener("change", e=>{
+  selectedRegion=e.target.value;
+  if(map) drawMap(lastData?.results || []);
+  if(lastData) search();
+});
+fetch("/api/meta").then(r=>r.json()).then(m=>{
+  $("#sampleBanner").hidden = !m.has_sample_data;
+  regions=m.regions || [];
+  selectedRegion=m.default_region || "waterloo_region";
+  renderRegionOptions();
+}).catch(()=>{});
+applyLang();
+</script>
+</body>
+</html>

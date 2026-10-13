@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CommunityOS · Admin</title>
+<style>
+:root{--ground:#edf1f0;--card:#fff;--ink:#12242b;--muted:#53666d;--line:#c9d3d6;--blue:#1646b8;--yellow:#f5b700;--red:#b3261e}
+@media (prefers-color-scheme:dark){:root{--ground:#0f1a1f;--card:#17262d;--ink:#e8f0f2;--muted:#9db0b7;--line:#2c4049;--blue:#7da2ff;--red:#ff8a80}}
+*{box-sizing:border-box} body{margin:0;background:var(--ground);color:var(--ink);font:16px/1.5 system-ui,"PingFang SC",sans-serif;padding:20px;max-width:900px;margin-inline:auto}
+h1{font-size:26px;margin:0 0 4px} .muted{color:var(--muted)}
+input,textarea,button{font:inherit;color:inherit} input,textarea{padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);width:100%}
+button{padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);cursor:pointer}
+button.primary{background:var(--blue);color:#fff;border:0} :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0}
+.card.review{border-left:6px solid var(--yellow)} .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.badge{background:var(--yellow);color:#12242b;border-radius:999px;padding:1px 10px;font-size:13px}
+code{background:var(--ground);padding:1px 6px;border-radius:4px}
+</style>
+</head>
+<body>
+<h1>Report queue</h1>
+<p class="muted">Confirm or fix reported listings. Verifying or updating resets the freshness clock and closes the reports.</p>
+<div class="row"><input id="tok" type="password" placeholder="Admin token" style="max-width:260px"><button class="primary" id="load">Load reports</button></div>
+<div id="list"></div>
+<hr>
+<h2>Resource candidates</h2>
+<p class="muted">LLM-extracted drafts stay unpublished until you verify the source and approve them.</p>
+<div class="row"><button class="primary" id="loadCandidates">Load candidate drafts</button></div>
+<div id="candidates"></div>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const H = () => ({"Content-Type":"application/json","X-Admin-Token":$("#tok").value});
+async function load(){
+  const r = await fetch("/api/admin/reports",{headers:H()});
+  if(!r.ok){ $("#list").innerHTML = `<p style="color:var(--red)">Invalid token.</p>`; return; }
+  const rows = await r.json();
+  $("#list").innerHTML = rows.length ? rows.map(x=>`
+    <div class="card ${x.needs_review?"review":""}" data-id="${esc(x.resource_id)}">
+      <b>${esc(x.name)}</b> <code>${esc(x.resource_id)}</code> <span class="badge">${x.n} open</span>${x.needs_review?' <span class="badge">needs review</span>':''}
+      <div class="muted">Reasons: ${esc(x.reasons.join(", "))}</div>
+      <div class="muted">Notes: ${esc(x.notes)}</div>
+      <div class="muted">Hours on file: ${esc(x.hours)} · last verified ${esc(x.last_verified_at)}</div>
+      <textarea rows="2" placeholder='Optional fix as JSON, e.g. {"hours":"Mon-Fri 10:00-14:00"}'></textarea>
+      <div class="row"><button class="primary" data-a="verify">Still correct (verify)</button>
+        <button data-a="update">Apply fix</button><button data-a="dismiss">Dismiss reports</button><span class="msg muted"></span></div>
+    </div>`).join("") : `<p class="muted">No open reports.</p>`;
+  document.querySelectorAll("[data-a]").forEach(b=>b.onclick=async()=>{
+    const c = b.closest(".card"), msg = c.querySelector(".msg"); let updates=null;
+    if(b.dataset.a==="update"){ try{ updates = JSON.parse(c.querySelector("textarea").value); }catch(e){ msg.textContent="Invalid JSON"; return; } }
+    const r = await fetch("/api/admin/resolve",{method:"POST",headers:H(),body:JSON.stringify({resource_id:c.dataset.id,action:b.dataset.a,updates})});
+    const j = await r.json(); msg.textContent = r.ok ? "Done" : (j.detail||"Error"); if(r.ok) setTimeout(load,600);
+  });
+}
+async function loadCandidates(){
+  const box=$("#candidates"), r=await fetch("/api/admin/candidates",{headers:H()});
+  if(!r.ok){ box.innerHTML='<p style="color:var(--red)">Invalid token.</p>'; return; }
+  const rows=await r.json();
+  box.innerHTML=rows.length?rows.map(x=>{
+    const fields=["name","category","subcategory","description","summary_zh","address","lat","lng","neighborhood","region_id","hours","eligibility","requires_appointment","requires_id","fee_cad","accepted_items","not_accepted","services","languages","tags","phone"];
+    const editable=Object.fromEntries(fields.filter(k=>Object.hasOwn(x,k)).map(k=>[k,x[k]]));
+    const evidence=Object.entries(x.evidence||{}).map(([k,v])=>'<li><b>'+esc(k)+':</b> '+esc(v)+'</li>').join("");
+    return '<div class="card" data-id="'+esc(x.id)+'"><b>'+esc(x.name||"Unnamed candidate")+'</b> <code>'+esc(x.id)+'</code> <span class="badge">evidence '+Math.round((x.confidence||0)*100)+'%</span><p>'+esc(x._problems?.join("; ")||"No schema problems detected. Verify the facts before publishing.")+'</p><p>Source: <a href="'+esc(x.source_url)+'" target="_blank" rel="noopener">'+esc(x.source_url)+'</a></p><ul>'+ (evidence||"<li>No verified excerpts returned by the extractor.</li>") +'</ul><label>Editable fields (JSON) <textarea class="candidate-updates" rows="8">'+esc(JSON.stringify(editable,null,2))+'</textarea></label><div class="row"><button class="primary" data-candidate="approve">Approve and publish</button> <button data-candidate="reject">Reject</button><span class="candidate-msg muted"></span></div></div>';
+  }).join(""):'<p class="muted">No pending candidates.</p>';
+  document.querySelectorAll("[data-candidate]").forEach(b=>b.onclick=async()=>{
+    const c=b.closest(".card"), msg=c.querySelector(".candidate-msg"); let updates=null;
+    if(b.dataset.candidate==="approve"){
+      try{updates=JSON.parse(c.querySelector(".candidate-updates").value);}
+      catch(e){msg.textContent="Invalid JSON";return;}
+    }
+    const response=await fetch("/api/admin/candidates/resolve",{method:"POST",headers:H(),body:JSON.stringify({candidate_id:c.dataset.id,action:b.dataset.candidate,updates})});
+    const result=await response.json(); msg.textContent=response.ok?"Done":(result.detail||"Error");
+    if(response.ok)setTimeout(loadCandidates,500);
+  });
+}
+$("#loadCandidates").onclick=loadCandidates;
+$("#load").onclick = load;
+</script>
+</body>
+</html>

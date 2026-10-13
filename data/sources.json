@@ -1,0 +1,26 @@
+[
+  {
+    "url": "https://houseoffriendship.org/how-we-help/food/",
+    "region_id": "kitchener"
+  },
+  {
+    "url": "https://rayofhope.net/programs/community-centre/marketplace-food-hamper/",
+    "region_id": "kitchener"
+  },
+  {
+    "url": "https://cambridgefoodbank.org/community-pantry/",
+    "region_id": "cambridge"
+  },
+  {
+    "url": "https://www.waterloorestore.habitatwr.ca/site/restore-donations-habitat-for-humanity-waterloo",
+    "region_id": "waterloo_region"
+  },
+  {
+    "url": "https://www.kpl.org/locations",
+    "region_id": "kitchener"
+  },
+  {
+    "url": "https://www.wpl.ca/locations",
+    "region_id": "waterloo"
+  }
+]
