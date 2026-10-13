@@ -7,8 +7,8 @@ Two paths that produce the *same* schema:
 
 Intent schema
 {
-  "category":  food_assistance | donation | learning | study_space | None,
-  "need_type": donate | receive | learn | space | None,
+  "category":  food_assistance | donation | learning | study_space | healthcare | None,
+  "need_type": donate | receive | learn | space | health | None,
   "needs":     canonical tags, e.g. ["furniture"] or ["math"] or ["halal"],
   "constraints": {free, open_now, no_id, no_appointment, near_campus},
   "identity":  subset of [students, newcomers, low_income, seniors],
@@ -25,8 +25,8 @@ import re
 
 from . import config
 
-CATEGORIES = ["food_assistance", "donation", "learning", "study_space"]
-NEED_TYPES = ["donate", "receive", "learn", "space"]
+CATEGORIES = ["food_assistance", "donation", "learning", "study_space", "healthcare"]
+NEED_TYPES = ["donate", "receive", "learn", "space", "health"]
 IDENTITIES = ["students", "newcomers", "low_income", "seniors"]  # same tags as resource.eligibility
 CONSTRAINTS = ["free", "open_now", "open_24h", "no_id", "no_appointment", "near_campus"]
 CAMPUSES = ["uw", "wlu", "conestoga"]
@@ -61,6 +61,17 @@ NEEDS = {
     "quiet_study": (["quiet", "silent", "安静"], "quiet silent study"),
     "group_rooms": (["group study", "group room", "meeting room", "小组讨论", "讨论室"], "group study rooms"),
     "wifi": (["wifi", "wi-fi", "internet", "无线网", "网络"], "wifi internet"),
+    # Healthcare service directory tags
+    "primary_care": (["family doctor", "family physician", "primary care", "general practitioner", "家庭医生", "家庭医师", "全科"], "family doctor primary care"),
+    "walk_in_clinic": (["walk-in clinic", "walk in clinic", "walk-in doctor", "urgent care clinic", "免预约诊所", "无需预约门诊"], "walk-in clinic urgent care"),
+    "mental_health": (["mental health", "counselling", "counseling", "psychologist", "therapy", "心理健康", "心理咨询", "心理辅导", "心理治疗", "精神健康"], "mental health counselling therapy"),
+    "dental": (["dentist", "dental", "牙医", "牙科", "口腔"], "dental dentist oral health"),
+    "sexual_health": (["sexual health", "sti", "sexually transmitted", "birth control", "性健康", "性传播", "避孕", "生殖健康"], "sexual health STI testing contraception"),
+    "vaccination": (["vaccine", "vaccination", "immunization", "疫苗", "接种", "免疫接种"], "vaccination immunization vaccines"),
+    "pharmacy": (["pharmacy", "pharmacist", "prescription", "药房", "药剂师", "处方"], "pharmacy pharmacist prescriptions"),
+    "vision_care": (["optometrist", "eye exam", "vision care", "eyeglasses", "眼科", "视力检查", "配眼镜"], "vision care optometrist eye exam"),
+    "prenatal": (["prenatal", "pregnancy care", "midwife", "产前", "孕期", "助产士"], "prenatal pregnancy care midwife"),
+    "substance_use": (["addiction support", "substance use", "harm reduction", "naloxone", "成瘾支持", "物质使用", "减害", "纳洛酮"], "substance use addiction harm reduction support"),
 }
 DONATION_ITEMS = {"furniture", "electronics", "clothing", "books", "kitchenware", "bedding", "bikes", "toys", "food", "mattress"}
 
@@ -69,6 +80,7 @@ CATEGORY_WORDS = {
     "learning": (["tutor", "tutoring", "homework", "lesson", "class", "learn", "workshop", "mentor", "辅导", "补习", "学习小组", "上课", "答疑", "家教", "学英语", "培训"], "free tutoring learning help"),
     "study_space": (["study", "library", "自习", "图书馆", "看书", "复习", "study space"], "quiet place to study library"),
     "donation": (["donate", "donation", "give away", "drop off", "get rid of", "dispose", "捐", "捐赠", "送人", "不要了", "处理掉", "闲置"], "donate accept drop-off donation"),
+    "healthcare": (["healthcare", "health care", "health services", "health resource", "clinic", "medical", "doctor", "医疗", "医疗服务", "医疗资源", "诊所", "医生", "看病", "健康服务", "健康资源"], "community healthcare public health clinics"),
 }
 DONATE_VERBS = ["donate", "donation", "give away", "give it away", "drop off", "get rid of", "don't need", "don’t need", "no longer need",
                 "捐", "送人", "不要了", "处理", "闲置", "转让", "送给"]
@@ -142,7 +154,12 @@ def parse_intent_rules(text: str) -> dict:
     donating = _any_word(t, DONATE_VERBS)
     has_item = any(n in DONATION_ITEMS for n in needs)
 
-    if donating or (has_item and not _any_word(t, FOOD_HINTS) and not _any_word(t, LEARN_HINTS)
+    health_needs = {"primary_care", "walk_in_clinic", "mental_health", "dental", "sexual_health", "vaccination", "pharmacy", "vision_care", "prenatal", "substance_use"}
+
+    if any(n in health_needs for n in needs) or _any_word(t, CATEGORY_WORDS["healthcare"][0]):
+        category, need_type = "healthcare", "health"
+        needs = [n for n in needs if n in health_needs]
+    elif donating or (has_item and not _any_word(t, FOOD_HINTS) and not _any_word(t, LEARN_HINTS)
                     and _any_word(t, ["have", "got", "old", "used", "有", "旧", "二手"])):
         category, need_type = "donation", "donate"
     elif _any_word(t, SPACE_HINTS) or (_any_word(t, ["study", "library"]) and not _any_word(t, LEARN_HINTS)):

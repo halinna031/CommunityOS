@@ -14,19 +14,21 @@ ITEM = {"zh": {"furniture": "家具", "electronics": "电子产品", "clothing":
                "bedding": "床上用品", "bikes": "自行车", "toys": "玩具", "food": "食品", "mattress": "床垫",
                "math": "数学", "english": "英语", "writing": "写作", "coding": "编程", "resume": "简历", "science": "理科",
                "homework": "作业辅导", "hot_meals": "热餐", "halal": "清真食品", "baby_supplies": "婴儿用品",
-               "produce": "新鲜蔬果", "groceries": "食品杂货", "quiet_study": "安静自习", "group_rooms": "讨论室", "wifi": "Wi-Fi", "computer_skills": "电脑技能"},
+               "produce": "新鲜蔬果", "groceries": "食品杂货", "quiet_study": "安静自习", "group_rooms": "讨论室", "wifi": "Wi-Fi", "computer_skills": "电脑技能",
+               "primary_care": "基层医疗", "walk_in_clinic": "免预约诊所", "mental_health": "心理健康服务", "dental": "牙科", "sexual_health": "性健康服务", "vaccination": "疫苗接种", "pharmacy": "药房", "vision_care": "视力保健", "prenatal": "孕产服务", "substance_use": "物质使用支持"},
         "en": {"furniture": "furniture", "electronics": "electronics", "clothing": "clothing", "books": "books",
                "kitchenware": "kitchenware", "bedding": "bedding", "bikes": "bikes", "toys": "toys", "food": "food",
                "mattress": "mattresses", "math": "math", "english": "English", "writing": "writing", "coding": "coding",
                "resume": "resumes", "science": "science", "homework": "homework help", "hot_meals": "hot meals",
                "halal": "halal food", "baby_supplies": "baby supplies", "produce": "fresh produce", "groceries": "groceries",
-               "quiet_study": "quiet study", "group_rooms": "group rooms", "wifi": "Wi-Fi", "computer_skills": "computer skills"}}
+               "quiet_study": "quiet study", "group_rooms": "group rooms", "wifi": "Wi-Fi", "computer_skills": "computer skills",
+               "primary_care": "primary care", "walk_in_clinic": "walk-in clinic", "mental_health": "mental health", "dental": "dental care", "sexual_health": "sexual health", "vaccination": "vaccination", "pharmacy": "pharmacy", "vision_care": "vision care", "prenatal": "prenatal care", "substance_use": "substance use support"}}
 WHO = {"zh": {"students": "在校学生", "newcomers": "新移民", "low_income": "低收入人群", "seniors": "老年人",
               "student": "在校学生", "newcomer": "新移民", "senior": "老年人"},
        "en": {"students": "students", "newcomers": "newcomers", "low_income": "low-income households", "seniors": "seniors",
               "student": "students", "newcomer": "newcomers", "senior": "seniors"}}
-CATEGORY = {"zh": {"food_assistance": "食物援助", "donation": "物品捐赠", "learning": "免费学习/辅导", "study_space": "自习空间"},
-            "en": {"food_assistance": "food assistance", "donation": "donations", "learning": "free learning help", "study_space": "study spaces"}}
+CATEGORY = {"zh": {"food_assistance": "食物援助", "donation": "物品捐赠", "learning": "免费学习/辅导", "study_space": "自习空间", "healthcare": "医疗服务"},
+            "en": {"food_assistance": "food assistance", "donation": "donations", "learning": "free learning help", "study_space": "study spaces", "healthcare": "healthcare services"}}
 
 
 def _items(lang: str, keys: list[str]) -> str:

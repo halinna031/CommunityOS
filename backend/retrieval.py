@@ -78,7 +78,8 @@ def hybrid_search(resources: list[dict], intent: dict, index, *, now: datetime, 
         cands = stage(False, True)
         if cands:
             relaxed.append("constraints:" + ",".join(sorted(k_ for k_ in active if k_ != "near_campus")))
-    if not cands and intent["needs"] and cat != "donation":
+    if not cands and intent["needs"] and cat not in ("donation", "healthcare"):
+        # Keep specific healthcare searches precise; unrelated services can be harmful.
         cands = stage(False, False)
         if cands:
             relaxed.append("needs")

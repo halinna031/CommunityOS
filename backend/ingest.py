@@ -23,7 +23,7 @@ from urllib.robotparser import RobotFileParser
 from . import config, hours
 from .intent import NEEDS
 
-CATEGORIES = {"food_assistance", "donation", "learning", "study_space"}
+CATEGORIES = {"food_assistance", "donation", "learning", "study_space", "healthcare"}
 ELIGIBILITY = {"anyone", "students", "newcomers", "low_income", "seniors"}
 REGION_IDS = set(config.REGIONS)
 REQUIRED = ["name", "category", "description", "address", "hours", "eligibility"]
@@ -159,6 +159,8 @@ def validate_resource(d: dict) -> list[str]:
         errs.append("item both accepted and not accepted")
     if d.get("category") == "donation" and not d.get("accepted_items"):
         errs.append("donation site without accepted_items")
+    if d.get("category") == "healthcare" and not d.get("services"):
+        errs.append("healthcare resource without confirmed services")
     h = d.get("hours") or ""
     if h and not any(hours.parse_hours(h).values()):
         errs.append("hours not parseable")
@@ -175,7 +177,8 @@ def extract_resource(page_text: str, source_url: str, region_id: str) -> dict:
         raise ValueError(f"region_id must be one of {sorted(REGION_IDS)}")
     from .llm import generate_text
     raw = generate_text(page_text[:12000], system_instruction=PROMPT,
-                        max_output_tokens=1200, json_mode=True)
+                        max_output_tokens=1200, json_mode=True,
+                        min_interval_seconds=13.0)
     m = re.search(r"\{.*\}", raw, re.S)
     d = json.loads(m.group(0)) if m else {}
     evidence = d.get("evidence") if isinstance(d.get("evidence"), dict) else {}
@@ -196,14 +199,40 @@ def extract_resource(page_text: str, source_url: str, region_id: str) -> dict:
 def _append_candidate(rec: dict, out=None) -> str:
     out = out or config.DATA_DIR / "pending.json"
     pending = json.loads(out.read_text(encoding="utf-8")) if out.exists() else []
-    identity = (rec.get("source_url", "").rstrip("/").casefold(), (rec.get("name") or "").casefold())
-    for old in pending:
-        old_identity = (old.get("source_url", "").rstrip("/").casefold(), (old.get("name") or "").casefold())
-        if identity[0] == old_identity[0] or identity[1] == old_identity[1]:
+    source_url = rec.get("source_url", "").rstrip("/").casefold()
+    name = (rec.get("name") or "").casefold()
+    for index, old in enumerate(pending):
+        old_url = old.get("source_url", "").rstrip("/").casefold()
+        old_name = (old.get("name") or "").casefold()
+        if (source_url and source_url == old_url) or (name and name == old_name):
+            if old.get("review_status", "pending") != "pending":
+                return "duplicate"
+            old_problems = old.get("_problems") or validate_resource(old)
+            new_problems = rec.get("_problems") or validate_resource(rec)
+            old_quality = (-len(old_problems), float(old.get("confidence") or 0))
+            new_quality = (-len(new_problems), float(rec.get("confidence") or 0))
+            if new_quality > old_quality:
+                pending[index] = rec
+                out.write_text(json.dumps(pending, ensure_ascii=False, indent=2), encoding="utf-8")
+                return "updated"
             return "duplicate"
     pending.append(rec)
     out.write_text(json.dumps(pending, ensure_ascii=False, indent=2), encoding="utf-8")
     return "added"
+
+
+def _source_has_completed_candidate(source_url: str, out=None) -> bool:
+    out = out or config.DATA_DIR / "pending.json"
+    pending = json.loads(out.read_text(encoding="utf-8")) if out.exists() else []
+    wanted = source_url.rstrip("/").casefold()
+    for rec in pending:
+        if rec.get("source_url", "").rstrip("/").casefold() != wanted:
+            continue
+        if rec.get("review_status") in {"approved", "rejected"}:
+            return True
+        if not (rec.get("_problems") or validate_resource(rec)):
+            return True
+    return False
 
 
 def _ingest_one(source_url: str, region_id: str) -> dict:
@@ -217,6 +246,7 @@ if __name__ == "__main__":
     ap.add_argument("--url", help="canonical source URL when source is a local text file")
     ap.add_argument("--region", choices=sorted(REGION_IDS), help="region served by a single source")
     ap.add_argument("--sources-file", help="JSON list of {url, region_id} entries for a polite batch run")
+    ap.add_argument("--refresh", action="store_true", help="reprocess sources that already have a reviewed or valid candidate")
     a = ap.parse_args()
     out = config.DATA_DIR / "pending.json"
     if a.sources_file:
@@ -227,9 +257,12 @@ if __name__ == "__main__":
             ap.error("sources file must contain a JSON array")
         for item in sources:
             try:
+                if not a.refresh and _source_has_completed_candidate(item["url"], out):
+                    print("skipped: existing candidate", item["url"])
+                    continue
                 rec = _ingest_one(item["url"], item["region_id"])
                 outcome = _append_candidate(rec, out)
-                print(outcome + ":", rec.get("name", item["url"]), rec.get("_problems", []))
+                print(outcome + ":", rec.get("name") or item["url"], rec.get("_problems", []))
             except Exception as exc:
                 print("failed:", item.get("url", "?"), str(exc))
     else:

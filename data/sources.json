@@ -16,11 +16,23 @@
     "region_id": "waterloo_region"
   },
   {
-    "url": "https://www.kpl.org/locations",
+    "url": "https://www.kpl.org/your-library/locations-and-hours",
     "region_id": "kitchener"
   },
   {
-    "url": "https://www.wpl.ca/locations",
+    "url": "https://www.wpl.ca/your-library/locations-hours/",
     "region_id": "waterloo"
+  },
+  {
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/",
+    "region_id": "waterloo_region"
+  },
+  {
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics",
+    "region_id": "waterloo_region"
+  },
+  {
+    "url": "https://www.regionofwaterloo.ca/vaccines",
+    "region_id": "waterloo_region"
   }
 ]
