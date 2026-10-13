@@ -13,8 +13,10 @@ TIMEZONE = os.getenv("COMMUNITYOS_TZ", "America/Toronto")
 # --- LLM (optional: the system works without a key using rule-based fallbacks)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
-USE_LLM_INTENT = os.getenv("USE_LLM_INTENT", "1") == "1"
-USE_LLM_EXPLAIN = os.getenv("USE_LLM_EXPLAIN", "0") == "1"
+# Gemini is reserved for ingestion. Interactive searches must not consume the
+# free-tier request quota; search intent always uses the local rule parser.
+USE_LLM_INTENT = False
+USE_LLM_EXPLAIN = False
 
 # --- Retrieval backend: "tfidf" (zero-dependency) or "st" (sentence-transformers)
 EMBEDDING_BACKEND = os.getenv("EMBEDDING_BACKEND", "tfidf")

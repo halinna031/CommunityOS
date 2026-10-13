@@ -36,7 +36,9 @@ class Service:
         if len(text) > 500:
             raise ValidationError("query too long (max 500 chars)")
         now = now or datetime.now(ZoneInfo(config.TIMEZONE))
-        intent = intent_mod.parse_intent(text, use_llm=use_llm)
+        # Keep interactive search independent of Gemini quotas. Gemini remains
+        # available to the ingestion pipeline, where extracted records are reviewed.
+        intent = intent_mod.parse_intent(text, use_llm=False)
         lang = intent["language"]
         user_loc = (lat, lng) if lat is not None and lng is not None else None
         if region_id not in config.REGIONS:

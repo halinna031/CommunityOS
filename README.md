@@ -2,7 +2,7 @@
 
 ## Why create CommunityOS
 
-I'm an international student, and I can totally understand some new international students or new immigrates feel confused about a new country and where they should turn to when they have different problems.
+I'm an international student living in Kitchener-Waterloo region, and I can totally understand some new international students or new immigrates feel confused about a new country and where they should turn to when they have different problems.
 
 
 
@@ -25,7 +25,8 @@ Then set up environment variables
 ```sh
 $env:GEMINI_API_KEY = "Your Gemini API key"
 $env:GEMINI_MODEL = "gemini-3.8-flash"
-$env:USE_LLM_INTENT = "1"
+# Search uses local rules; Gemini is reserved for webpage ingestion.
+$env:USE_LLM_INTENT = "0"
 $env:ADMIN_TOKEN = "Set a admin token for yourself so you can enter admin version"
 ```
 

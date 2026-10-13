@@ -26,7 +26,8 @@ from .intent import NEEDS
 CATEGORIES = {"food_assistance", "donation", "learning", "study_space", "healthcare"}
 ELIGIBILITY = {"anyone", "students", "newcomers", "low_income", "seniors"}
 REGION_IDS = set(config.REGIONS)
-REQUIRED = ["name", "category", "description", "address", "hours", "eligibility"]
+# Hours may be unknown for appointment-based or directory-level services.
+REQUIRED = ["name", "category", "description", "address", "eligibility"]
 CRAWLER_UA = "CommunityOSResourceBot/1.0"
 MAX_PAGE_BYTES = 2_000_000
 

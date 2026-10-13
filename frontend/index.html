@@ -171,8 +171,12 @@ const COLORS = {match:"#1646b8",eligibility:"#5b87e6",distance:"#2a9d8f",open:"#
 const ICON = {ok:"✓",warn:"!",bad:"✕",info:"i"};
 
 let lang = (navigator.language||"zh").startsWith("zh") ? "zh" : "en";
-let useLoc = false, loc = null, map = null, markers = {}, lastData = null;
+let useLoc = false, loc = null, map = null, markers = {}, userMarker = null, lastData = null;
 let regions = [], selectedRegion = "waterloo_region";
+const GEOCODE_CACHE_KEY = "communityos-geocode-v1";
+let geocodeCache = {};
+try { geocodeCache = JSON.parse(localStorage.getItem(GEOCODE_CACHE_KEY) || "{}"); } catch(e) {}
+let geocodeQueue = Promise.resolve(), lastGeocodeAt = 0;
 let clientId = "";
 try{ clientId = localStorage.getItem("cid") || (crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)); localStorage.setItem("cid",clientId);}catch(e){ clientId = String(Math.random()).slice(2); }
 
@@ -193,9 +197,9 @@ function applyLang(){
 }
 $("#langBtn").onclick = ()=>{ lang = lang==="zh"?"en":"zh"; applyLang(); };
 $("#locBtn").onclick = ()=>{
-  if(useLoc){ useLoc=false; loc=null; $("#locBtn").setAttribute("aria-pressed","false"); return applyLang(); }
+  if(useLoc){ useLoc=false; loc=null; $("#locBtn").setAttribute("aria-pressed","false"); applyLang(); drawMap(lastData?.results||[]); return; }
   navigator.geolocation?.getCurrentPosition(p=>{ loc={lat:p.coords.latitude,lng:p.coords.longitude}; useLoc=true;
-    $("#locBtn").setAttribute("aria-pressed","true"); applyLang(); }, ()=>{}, {timeout:8000});
+    $("#locBtn").setAttribute("aria-pressed","true"); applyLang(); drawMap(lastData?.results||[]); }, ()=>{}, {timeout:8000});
 };
 $("#go").onclick = search;
 $("#q").addEventListener("keydown", e=>{ if(e.key==="Enter" && (e.metaKey||e.ctrlKey)) search(); });
@@ -302,19 +306,54 @@ function drawMap(results){
   const selected = regions.find(r=>r.id===selectedRegion);
   const center = selected?.center || [43.4516,-80.4925];
   if(!map){
-    map = L.map("map").setView(center, selectedRegion==="waterloo_region"?11:13);
+    map = L.map("map").setView(loc ? [loc.lat,loc.lng] : center, loc ? 13 : selectedRegion==="waterloo_region"?11:13);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
-  } else if(!results.length) map.setView(center, selectedRegion==="waterloo_region"?11:13);
+  }
   Object.values(markers).forEach(m=>m.remove()); markers = {};
-  results.filter(r=>r.lat!==null && r.lng!==null && Number.isFinite(Number(r.lat)) && Number.isFinite(Number(r.lng))).forEach(r=>{
-    const m = L.marker([r.lat,r.lng],{icon:L.divIcon({className:"",html:`<div class="pin">${r.rank}</div>`,iconSize:[28,28],iconAnchor:[14,14]})}).addTo(map);
+  const points = [];
+  results.forEach(r=>{
+    const point = Number.isFinite(Number(r.lat)) && r.lat!==null && r.lng!==null && Number.isFinite(Number(r.lng))
+      ? [Number(r.lat),Number(r.lng)] : geocodeCache[geocodeKey(r.address)];
+    if(!point) { if(canGeocode(r.address)) queueGeocode(r.address); return; }
+    const m = L.marker(point,{icon:L.divIcon({className:"",html:`<div class="pin">${r.rank}</div>`,iconSize:[28,28],iconAnchor:[14,14]})}).addTo(map);
     m.bindTooltip(r.name); m.on("click",()=>{ document.getElementById("card-"+r.id)?.scrollIntoView({behavior:"smooth",block:"center"}); hl(r.id,true); setTimeout(()=>hl(r.id,false),1500); });
     m.on("mouseover",()=>hl(r.id,true)); m.on("mouseout",()=>hl(r.id,false));
     markers[r.id] = m;
   });
-  if(Object.keys(markers).length) map.fitBounds(L.featureGroup(Object.values(markers)).getBounds().pad(0.3),{maxZoom:14});
+  if(userMarker) userMarker.remove();
+  if(useLoc && loc){
+    userMarker = L.circleMarker([loc.lat,loc.lng],{radius:9,color:"#fff",weight:3,fillColor:"#2563eb",fillOpacity:1}).addTo(map);
+    userMarker.bindTooltip(lang==="zh"?"你的位置":"Your location");
+    points.push(userMarker);
+  } else userMarker = null;
+  points.push(...Object.values(markers));
+  if(points.length) map.fitBounds(L.featureGroup(points).getBounds().pad(0.3),{maxZoom:14});
   else map.setView(center, selectedRegion==="waterloo_region"?11:13);
   setTimeout(()=>map.invalidateSize(),50);
+}
+
+function geocodeKey(address){ return String(address||"").trim().toLowerCase(); }
+function canGeocode(address){ return /(?:^|,\s*)\d+\s+[^,]+,\s*[^,]+,\s*(ON|Ontario)\b/i.test(String(address||"")); }
+function queueGeocode(address){
+  const key=geocodeKey(address);
+  geocodeQueue=geocodeQueue.then(async()=>{
+    if(geocodeCache[key]) return;
+    const wait=Math.max(0,1100-(Date.now()-lastGeocodeAt));
+    if(wait) await new Promise(resolve=>setTimeout(resolve,wait));
+    lastGeocodeAt=Date.now();
+    try{
+      const streetAddress=String(address).match(/(?:^|,\s*)(\d+\s+[^,]+,\s*[^,]+,\s*(?:ON|Ontario)\b.*)$/i)?.[1]||address;
+      const url="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ca&q="+encodeURIComponent(streetAddress);
+      const response=await fetch(url,{headers:{"Accept":"application/json"}});
+      if(!response.ok) return;
+      const found=await response.json();
+      if(found[0]){
+        geocodeCache[key]=[Number(found[0].lat),Number(found[0].lon)];
+        try{ localStorage.setItem(GEOCODE_CACHE_KEY,JSON.stringify(geocodeCache)); }catch(e){}
+        if(lastData) drawMap(lastData.results||[]);
+      }
+    }catch(e){ /* map continues to work when the geocoder is unavailable */ }
+  });
 }
 
 function renderRegionOptions(){
