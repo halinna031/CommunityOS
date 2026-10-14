@@ -1,0 +1,7 @@
+# FastAPI version
+fastapi>=0.110
+uvicorn[standard]>=0.29
+
+# Optional
+google-genai>=1.0
+sentence-transformers>=3
