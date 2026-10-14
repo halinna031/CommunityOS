@@ -21,8 +21,10 @@ def _is_24h(res: dict) -> bool:
 
 
 def _constraint_ok(res: dict, intent: dict, now: datetime, active: dict) -> bool:
-    if active.get("free") and res["fee_cad"] > 0:
-        return False
+    if active.get("free"):
+        fee = res.get("fee_cad")
+        if fee is None or fee > 0:
+            return False
     if active.get("no_id") and res["requires_id"]:
         return False
     if active.get("no_appointment") and res["requires_appointment"]:
@@ -38,6 +40,11 @@ def _eligible_ok(res: dict, intent: dict) -> bool:
     """If the user told us who they are and the resource is restricted to someone else, exclude."""
     elig = set(res["eligibility"]) or {"anyone"}
     ident = set(intent["identity"])
+    # A person's student/newcomer status does not establish their income or
+    # program eligibility. Keep restricted healthcare listings visible and ask
+    # them to confirm the rules with the provider.
+    if res.get("category") == "healthcare":
+        return True
     return "anyone" in elig or not ident or bool(ident & elig)
 
 
@@ -52,7 +59,9 @@ def hybrid_search(resources: list[dict], intent: dict, index, *, now: datetime, 
     def stage(use_constraints: bool, use_needs: bool) -> list[dict]:
         out = []
         for r in resources:
-            if region_id and region_id != "waterloo_region" and r.get("region_id", "waterloo_region") != region_id:
+            # Region-wide services remain available in each municipality.
+            if (region_id and region_id != "waterloo_region"
+                    and r.get("region_id", "waterloo_region") not in (region_id, "waterloo_region")):
                 continue
             if cat and r["category"] != cat:
                 continue
@@ -94,6 +103,8 @@ def hybrid_search(resources: list[dict], intent: dict, index, *, now: datetime, 
         if "constraints:" in "".join(relaxed):
             if active.get("open_now") and s["open_status"]["is_open"] is not True:
                 s["signals"].append({"level": "warn", "code": "violates_open_now", "p": {}})
+            if active.get("free") and r.get("fee_cad") != 0:
+                s["signals"].append({"level": "warn", "code": "violates_free", "p": {"unknown": r.get("fee_cad") is None}})
             if active.get("open_24h") and not _is_24h(r):
                 s["signals"].append({"level": "warn", "code": "violates_24h", "p": {}})
             if active.get("no_id") and r["requires_id"]:

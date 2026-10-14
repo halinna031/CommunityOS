@@ -1,17 +1,687 @@
 [
-  {"id":"real-food-house-of-friendship","name":"House of Friendship Emergency Food Hampers","category":"food_assistance","subcategory":"emergency_food_hamper","description":"Emergency food hampers for individuals and families in need. Visit 807 Guelph Street Monday to Friday, 9:30 a.m.–4 p.m.; call ahead to book an appointment and bring valid identification. Hampers typically contain 3–5 days of food; availability and contents may vary.","summary_zh":"为有食物援助需要的个人和家庭提供紧急食品包。需提前致电预约并携带有效证件；食品包内容和供应情况可能变化。","address":"807 Guelph Street, Kitchener, ON N2H 5Z2","lat":null,"lng":null,"neighborhood":"Kitchener","region_id":"kitchener","hours":"Mon-Fri 09:30-16:00","eligibility":["anyone"],"requires_appointment":true,"requires_id":true,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["groceries","produce","baby_supplies"],"languages":["English"],"phone":"519-742-0662","url":"https://houseoffriendship.org/how-we-help/food/","source_url":"https://houseoffriendship.org/how-we-help/food/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source"]},
-  {"id":"real-food-ray-of-hope","name":"Ray of Hope Marketplace Food Hamper","category":"food_assistance","subcategory":"food_hamper","description":"Monthly food hamper for individuals living within the downtown Kitchener boundary. Sign-up starts Monday–Thursday at 11 a.m.; service runs 11:30 a.m.–2 p.m. Spots are limited and first-come, first-served. No appointment is needed. Call to confirm current eligibility and availability.","summary_zh":"为居住在基奇纳市中心服务范围内的人士提供每月食品包，名额有限、先到先得，无需预约。出发前请确认资格和余量。","address":"Ray of Hope Community Centre, 659 King Street East, Kitchener, ON","lat":null,"lng":null,"neighborhood":"Downtown Kitchener","region_id":"kitchener","hours":"Mon-Thu 11:30-14:00","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["groceries"],"languages":["English"],"phone":"519-578-8018","url":"https://rayofhope.net/programs/community-centre/marketplace-food-hamper/","source_url":"https://rayofhope.net/programs/community-centre/marketplace-food-hamper/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","service_boundary_applies"]},
-  {"id":"real-food-cambridge-food-bank","name":"Cambridge Food Bank Community Pantry","category":"food_assistance","subcategory":"emergency_food_hamper","description":"Emergency food hampers for residents of Cambridge and North Dumfries, generally once per calendar month. In-person pickup is available without an appointment during listed hours. Bring identification, proof of Cambridge or North Dumfries address, and reusable bags. Food-locker and delivery options may be available by arrangement.","summary_zh":"为剑桥市和 North Dumfries 居民提供紧急食品包，通常每月一次。无需预约，但需携带身份证明、当地住址证明和购物袋。","address":"54 Ainslie Street South, Cambridge, ON N1R 3K3","lat":null,"lng":null,"neighborhood":"Cambridge","region_id":"cambridge","hours":"Mon 12:00-18:30; Tue-Fri 09:00-16:30","eligibility":["anyone"],"requires_appointment":false,"requires_id":true,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["groceries","produce","baby_supplies"],"languages":["English"],"phone":"519-622-6550","url":"https://cambridgefoodbank.org/community-pantry/","source_url":"https://cambridgefoodbank.org/community-pantry/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","proof_of_address_required"]},
-  {"id":"real-food-bank-referral","name":"The Food Bank of Waterloo Region — Food Assistance Outreach","category":"food_assistance","subcategory":"food_program_referral","description":"Centralized outreach line that helps people find a nearby food hamper program and ask about delivery or after-hours locker pickup. The Food Bank is a distribution centre and does not hand out food directly from its office. Phone line hours are Monday–Friday, 9 a.m.–noon; holidays and weekends closed.","summary_zh":"集中转介热线，协助查找附近食品援助项目，并咨询送餐或非营业时间储物柜。该机构办公室本身不直接发放食品。","address":"Serving Kitchener, Waterloo, Cambridge and surrounding townships; call for a nearby program","lat":null,"lng":null,"neighborhood":"Waterloo Region","region_id":"waterloo_region","hours":"Mon-Fri 09:00-12:00","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["groceries"],"languages":["English"],"phone":"519-743-5576 ext. 340","url":"https://www.thefoodbank.ca/find-food/","source_url":"https://www.thefoodbank.ca/find-food/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","referral_service","not_a_walk_in_food_bank"]},
-  {"id":"real-donate-food-bank-kitchener","name":"The Food Bank of Waterloo Region — Food Donation Drop-off","category":"donation","subcategory":"food_donation","description":"Accepts unopened, sealed, non-perishable food donations at the customer service door. Homemade food is not accepted. Check best-before and expiry guidance; fresh, frozen or prepared food donations should be arranged with the organization first. Regular drop-off hours Monday–Friday, 8:30 a.m.–4:30 p.m.; call ahead for holiday or seasonal hours.","summary_zh":"接收未开封、密封的常温食品捐赠；不接收自制食品。新鲜、冷冻或熟食捐赠需先联系确认。","address":"50 Alpine Court, Kitchener, ON N2E 2M7","lat":null,"lng":null,"neighborhood":"Kitchener","region_id":"kitchener","hours":"Mon-Fri 08:30-16:30","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":["food"],"not_accepted":[],"services":[],"languages":["English"],"phone":"519-743-5576","url":"https://www.thefoodbank.ca/donate-most-needed-food-items/","source_url":"https://www.thefoodbank.ca/contact/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","call_ahead_for_other_food_types"]},
-  {"id":"real-donate-restore-waterloo","name":"Habitat for Humanity Waterloo Region ReStore — Waterloo","category":"donation","subcategory":"reuse_store","description":"Accepts selected reusable furniture and household/building items in good condition. Upholstered sofas and chairs must be smoke-, stain- and tear-free; mattresses are not accepted. Drop-off donations are accepted; call ahead or request pickup for larger donations. Check the accepted-items list before travelling.","summary_zh":"接收符合条件、状态良好的家具和家居建材。软包沙发/椅子需无烟味、污渍和破损；不收床垫。大件捐赠请先联系。","address":"120 Northfield Drive East, Waterloo, ON N2J 4G8","lat":null,"lng":null,"neighborhood":"Waterloo","region_id":"waterloo","hours":"Mon-Fri 09:00-18:00; Sat 09:00-17:00","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":["furniture"],"not_accepted":["mattress"],"services":[],"languages":["English"],"phone":"519-747-0664 ext. 221","url":"https://www.waterloorestore.habitatwr.ca/site/restore-donations-habitat-for-humanity-waterloo","source_url":"https://www.habitatwr.ca/site/restore-locations-habitat-for-humanity-waterloo","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","condition_restrictions","call_ahead"]},
-  {"id":"real-donate-restore-cambridge","name":"Habitat for Humanity Waterloo Region ReStore — Cambridge","category":"donation","subcategory":"reuse_store","description":"Habitat ReStore donation location. The regional accepted-items page lists selected reusable furniture and household/building materials; upholstered items must meet condition requirements and mattresses are not accepted. Check the current accepted-items list and call before transporting large donations.","summary_zh":"Habitat ReStore 捐赠点。地区接收清单包含部分可再用家具及家居建材；软包家具须符合状况要求，不收床垫。运送大件前请先联系确认。","address":"200 Preston Parkway, Cambridge, ON N3H 5N1","lat":null,"lng":null,"neighborhood":"Cambridge","region_id":"cambridge","hours":"Mon-Fri 09:00-18:00; Sat 09:00-17:00","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":["furniture"],"not_accepted":["mattress"],"services":[],"languages":["English"],"phone":"519-653-5666","url":"https://www.waterloorestore.habitatwr.ca/site/restore-donations-habitat-for-humanity-waterloo","source_url":"https://www.habitatwr.ca/site/restore-locations-habitat-for-humanity-waterloo","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","condition_restrictions","call_ahead"]},
-  {"id":"real-learn-literacy-kitchener","name":"The Literacy Group of Waterloo Region — Kitchener","category":"learning","subcategory":"adult_literacy","description":"Free adult literacy and basic-skills tutoring, including reading, writing, math, digital skills and workplace essentials. One-to-one and small-group instruction may be available. Intake assessment is required; call to confirm eligibility, assessment availability and current location details. Programs are for adults and require English-language facility.","summary_zh":"为成年人提供免费的读写、数学、数字技能和职场基础能力辅导，可有一对一或小组形式。需先联系安排评估并确认资格。","address":"300 Victoria Street North, Unit 8, Kitchener, ON N2H 6R9","lat":null,"lng":null,"neighborhood":"Kitchener","region_id":"kitchener","hours":"Mon-Thu 09:00-21:00; Fri 09:00-16:00","eligibility":["anyone"],"requires_appointment":true,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["math","writing","computer_skills"],"languages":["English"],"phone":"519-743-6090","url":"https://projectread.ca/programs-and-services/directory-of-programs/get-set-skills-education-and-training/","source_url":"https://waterloo.211centralsouth.ca/detail/73444066/agency/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_directory","adults_only","intake_assessment"]},
-  {"id":"real-learn-literacy-cambridge","name":"The Literacy Group of Waterloo Region — Cambridge","category":"learning","subcategory":"adult_literacy","description":"Free adult literacy and basic-skills tutoring, including reading, writing, math, digital skills and workplace essentials. Get SET intake includes an assessment; call to confirm eligibility and current program availability before visiting.","summary_zh":"为成年人提供免费的读写、数学、数字技能及职场基础能力辅导。Get SET 项目需要入学评估，请先致电确认资格与名额。","address":"40 Ainslie Street South, 2nd Floor, Cambridge, ON N1R 3K1","lat":null,"lng":null,"neighborhood":"Cambridge","region_id":"cambridge","hours":"Mon-Wed 09:00-21:00; Thu 09:00-17:00; Fri 09:00-16:00","eligibility":["anyone"],"requires_appointment":true,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["math","writing","computer_skills"],"languages":["English"],"phone":"519-621-7993","url":"https://projectread.ca/programs-and-services/directory-of-programs/get-set-skills-education-and-training/","source_url":"https://waterloo.211centralsouth.ca/detail/92364352/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_directory","adults_only","intake_assessment"]},
-  {"id":"real-study-kpl-central","name":"Kitchener Public Library — Central Library Study Spaces","category":"study_space","subcategory":"public_library","description":"Public study desks, tables and chairs are available throughout library locations on a first-come basis. Free study rooms are also available; some rooms require a library card and advance reservation. Central Library is open Monday–Thursday 9 a.m.–9 p.m. and Friday–Saturday 9 a.m.–5 p.m.; closed Sunday and statutory holidays.","summary_zh":"馆内提供先到先用的自习桌位；部分免费学习室需图书证并提前预约。法定假日可能闭馆，出发前请查看最新时间。","address":"85 Queen Street North, Kitchener, ON N2H 2H1","lat":null,"lng":null,"neighborhood":"Downtown Kitchener","region_id":"kitchener","hours":"Mon-Thu 09:00-21:00; Fri-Sat 09:00-17:00","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["quiet_study","group_rooms","wifi"],"languages":["English"],"phone":"519-743-0271","url":"https://www.kpl.org/services/rent-or-reserve-spaces/study-rooms","source_url":"https://www.kpl.org/your-library/locations-and-hours","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","some_rooms_require_library_card_and_reservation"]},
-  {"id":"real-study-waterloo-main","name":"Waterloo Public Library — Main Library","category":"study_space","subcategory":"public_library","description":"The Main Library offers ample study space, quiet study carrels and a bookable study room, plus free Wi-Fi. Current regular hours: Monday–Thursday 9:30 a.m.–9 p.m. and Friday–Saturday 9:30 a.m.–5:30 p.m. Sunday hours are scheduled to resume October 18, 2026; check the library site for temporary closures and holiday hours.","summary_zh":"主馆提供充足自习空间、安静单人座位和可预约学习室，并提供免费 Wi-Fi。周日开放时间处于调整期，请出发前查看官网。","address":"35 Albert Street, Waterloo, ON N2L 5E2","lat":null,"lng":null,"neighborhood":"Uptown Waterloo","region_id":"waterloo","hours":"Mon-Thu 09:30-21:00; Fri-Sat 09:30-17:30","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["quiet_study","wifi"],"languages":["English"],"phone":"519-886-1310","url":"https://www.wpl.ca/your-library/locations-hours/main-library/","source_url":"https://www.wpl.ca/your-library/locations-hours/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source","some_study_rooms_bookable"]},
-  {"id":"real-study-cambridge-queens-square","name":"Idea Exchange — Queen's Square","category":"study_space","subcategory":"public_library","description":"Cambridge Public Library location with study and reading areas. Regular hours listed by the City: Monday–Thursday 9:30 a.m.–8:30 p.m., Friday–Saturday 9:30 a.m.–5:30 p.m. and Sunday 1–5 p.m. Holiday schedules may differ.","summary_zh":"剑桥公共图书馆 Queen's Square 馆，设有学习和阅读区域。节假日时间可能不同，请查看官网公告。","address":"1 North Square, Cambridge, ON N1S 2K6","lat":null,"lng":null,"neighborhood":"Cambridge","region_id":"cambridge","hours":"Mon-Thu 09:30-20:30; Fri-Sat 09:30-17:30; Sun 13:00-17:00","eligibility":["anyone"],"requires_appointment":false,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["quiet_study","wifi"],"languages":["English"],"phone":"519-621-0460","url":"https://www.cambridge.ca/recreation-culture/libraries-galleries/","source_url":"https://www.cambridge.ca/recreation-culture/libraries-galleries/","last_verified_at":"2026-10-12","is_sample":false,"tags":["official_source"]},
-  {"id":"real-health-sexual-health-region","name":"Region of Waterloo Public Health — Sexual Health Services","category":"healthcare","subcategory":"sexual_health","description":"Confidential public health services include STI testing and treatment, contraception, pregnancy-related services and sexual-health vaccines. Sexual health clinics are appointment-only. Services are free; most do not require a health card, and eligibility varies by service. Confirm the correct clinic when booking.","summary_zh":"滑铁卢地区公共卫生局提供保密的性健康服务，包括性传播感染检测与治疗、避孕、孕产相关服务和性健康疫苗。诊所需预约；服务免费，多数服务不要求健康卡。不同服务的资格和地点可能不同，预约前请查看官网。","address":"Service locations vary. STI appointments include 99 Regina Street South, Waterloo, and 150 Main Street, Cambridge; confirm the location for your service when booking.","lat":null,"lng":null,"neighborhood":"Waterloo Region","region_id":"waterloo_region","hours":"","eligibility":["anyone"],"requires_appointment":true,"requires_id":false,"fee_cad":0,"accepted_items":[],"not_accepted":[],"services":["sexual_health","vaccination"],"languages":[],"phone":"519-575-4400","url":"https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/","source_url":"https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/","last_verified_at":"2026-10-13","is_sample":false,"tags":["official_source","eligibility_varies","appointment_only"]},
-  {"id":"real-health-public-dental-clinics-region","name":"Region of Waterloo Public Health — Dental Clinics","category":"healthcare","subcategory":"dental","description":"Public Health operates dental clinics in Cambridge and Waterloo for Waterloo Region residents who meet financial eligibility requirements and are not eligible for the Canadian Dental Care Plan. Children 17 and under may receive free basic services if eligible; adult services have separate criteria and may be limited. An eligibility assessment and appointment are required; call to confirm clinic location and required documents.","summary_zh":"滑铁卢地区公共卫生局在剑桥和滑铁卢设有牙科诊所，服务对象须符合收入资格且不符合加拿大牙科护理计划条件。符合资格的 17 岁及以下儿童可获得免费基础服务；成人另有资格和服务限制。需先评估资格并预约，请致电确认地点及所需文件。","address":"Public Health dental clinics in Cambridge and Waterloo. Call 519-575-4400 ext. 3086 to confirm the appointment location.","lat":null,"lng":null,"neighborhood":"Waterloo Region","region_id":"waterloo_region","hours":"","eligibility":["low_income"],"requires_appointment":true,"requires_id":false,"fee_cad":null,"accepted_items":[],"not_accepted":[],"services":["dental"],"languages":[],"phone":"519-575-4400 ext. 3086","url":"https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics","source_url":"https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics","last_verified_at":"2026-10-13","is_sample":false,"tags":["official_source","income_eligibility","eligibility_varies","appointment_required"]},
-  {"id":"real-health-public-vaccine-clinics-region","name":"Region of Waterloo Public Health — Vaccine Clinics","category":"healthcare","subcategory":"vaccination","description":"Public Health vaccine appointments are available in Kitchener and Cambridge for eligible people who do not have an Ontario health card or a family doctor. Clinic appointments are by appointment only. A neighbourhood mobile clinic may offer walk-in service; check its current schedule. Vaccine eligibility and availability vary by age and vaccine.","summary_zh":"滑铁卢地区公共卫生局在基奇纳和剑桥提供疫苗预约服务，适用于符合条件且没有安省健康卡或家庭医生的人士。诊所需预约；社区流动诊所可能提供免预约服务，请查看最新安排。疫苗资格和供应情况因年龄及疫苗种类而异。","address":"Kitchener and Cambridge Public Health clinic appointments; confirm the exact clinic location in the official booking page before travelling.","lat":null,"lng":null,"neighborhood":"Waterloo Region","region_id":"waterloo_region","hours":"","eligibility":["anyone"],"requires_appointment":true,"requires_id":false,"fee_cad":null,"accepted_items":[],"not_accepted":[],"services":["vaccination"],"languages":[],"phone":"519-575-4400","url":"https://www.regionofwaterloo.ca/programs-and-services/public-health/vaccines/","source_url":"https://www.regionofwaterloo.ca/programs-and-services/public-health/vaccines/","last_verified_at":"2026-10-13","is_sample":false,"tags":["official_source","eligibility_varies","appointment_only"]}
+  {
+    "id": "real-food-house-of-friendship",
+    "name": "House of Friendship Emergency Food Hampers",
+    "category": "food_assistance",
+    "subcategory": "emergency_food_hamper",
+    "description": "Emergency food hampers for individuals and families in need. Visit 807 Guelph Street Monday to Friday, 9:30 a.m.–4 p.m.; call ahead to book an appointment and bring valid identification. Hampers typically contain 3–5 days of food; availability and contents may vary.",
+    "summary_zh": "为有食物援助需要的个人和家庭提供紧急食品包。需提前致电预约并携带有效证件；食品包内容和供应情况可能变化。",
+    "address": "807 Guelph Street, Kitchener, ON N2H 5Z2",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Kitchener",
+    "region_id": "kitchener",
+    "hours": "Mon-Fri 09:30-16:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": true,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "groceries",
+      "produce",
+      "baby_supplies"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-742-0662",
+    "url": "https://houseoffriendship.org/how-we-help/food/",
+    "source_url": "https://houseoffriendship.org/how-we-help/food/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source"
+    ]
+  },
+  {
+    "id": "real-food-ray-of-hope",
+    "name": "Ray of Hope Marketplace Food Hamper",
+    "category": "food_assistance",
+    "subcategory": "food_hamper",
+    "description": "Monthly food hamper for individuals living within the downtown Kitchener boundary. Sign-up starts Monday–Thursday at 11 a.m.; service runs 11:30 a.m.–2 p.m. Spots are limited and first-come, first-served. No appointment is needed. Call to confirm current eligibility and availability.",
+    "summary_zh": "为居住在基奇纳市中心服务范围内的人士提供每月食品包，名额有限、先到先得，无需预约。出发前请确认资格和余量。",
+    "address": "659 King Street East, Kitchener, ON",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Downtown Kitchener",
+    "region_id": "kitchener",
+    "hours": "Mon-Thu 11:30-14:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "groceries"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-578-8018",
+    "url": "https://rayofhope.net/programs/community-centre/marketplace-food-hamper/",
+    "source_url": "https://rayofhope.net/programs/community-centre/marketplace-food-hamper/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "service_boundary_applies"
+    ]
+  },
+  {
+    "id": "real-food-cambridge-food-bank",
+    "name": "Cambridge Food Bank Community Pantry",
+    "category": "food_assistance",
+    "subcategory": "emergency_food_hamper",
+    "description": "Emergency food hampers for residents of Cambridge and North Dumfries, generally once per calendar month. In-person pickup is available without an appointment during listed hours. Bring identification, proof of Cambridge or North Dumfries address, and reusable bags. Food-locker and delivery options may be available by arrangement.",
+    "summary_zh": "为剑桥市和 North Dumfries 居民提供紧急食品包，通常每月一次。无需预约，但需携带身份证明、当地住址证明和购物袋。",
+    "address": "54 Ainslie Street South, Cambridge, ON N1R 3K3",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "hours": "Mon 12:00-18:30; Tue-Fri 09:00-16:30",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": true,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "groceries",
+      "produce",
+      "baby_supplies"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-622-6550",
+    "url": "https://cambridgefoodbank.org/community-pantry/",
+    "source_url": "https://cambridgefoodbank.org/community-pantry/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "proof_of_address_required"
+    ]
+  },
+  {
+    "id": "real-food-bank-referral",
+    "name": "The Food Bank of Waterloo Region — Food Assistance Outreach",
+    "category": "food_assistance",
+    "subcategory": "food_program_referral",
+    "description": "Call to find a nearby food hamper program and ask about delivery or after-hours locker pickup. The Food Bank is a distribution centre; food is not handed out at its office. The phone line is open Monday to Friday, 9 a.m. to noon, except holidays.",
+    "summary_zh": "致电查询附近的食品援助项目，也可询问送餐或非营业时间取餐柜。食品银行的办公室不直接发放食品。热线工作日 9 点至中午开放，节假日除外。",
+    "address": "Serving Kitchener, Waterloo, Cambridge and surrounding townships; call for a nearby program",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Waterloo Region",
+    "region_id": "waterloo_region",
+    "hours": "Mon-Fri 09:00-12:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "groceries"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-743-5576 ext. 340",
+    "url": "https://www.thefoodbank.ca/find-food/",
+    "source_url": "https://www.thefoodbank.ca/find-food/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "referral_service",
+      "not_a_walk_in_food_bank"
+    ]
+  },
+  {
+    "id": "real-donate-food-bank-kitchener",
+    "name": "The Food Bank of Waterloo Region — Food Donation Drop-off",
+    "category": "donation",
+    "subcategory": "food_donation",
+    "description": "Accepts unopened, sealed, non-perishable food donations at the customer service door. Homemade food is not accepted. Check best-before and expiry guidance; fresh, frozen or prepared food donations should be arranged with the organization first. Regular drop-off hours Monday–Friday, 8:30 a.m.–4:30 p.m.; call ahead for holiday or seasonal hours.",
+    "summary_zh": "接收未开封、密封的常温食品捐赠；不接收自制食品。新鲜、冷冻或熟食捐赠需先联系确认。",
+    "address": "50 Alpine Court, Kitchener, ON N2E 2M7",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Kitchener",
+    "region_id": "kitchener",
+    "hours": "Mon-Fri 08:30-16:30",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [
+      "food"
+    ],
+    "not_accepted": [],
+    "services": [],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-743-5576",
+    "url": "https://www.thefoodbank.ca/donate-most-needed-food-items/",
+    "source_url": "https://www.thefoodbank.ca/contact/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "call_ahead_for_other_food_types"
+    ]
+  },
+  {
+    "id": "real-donate-restore-waterloo",
+    "name": "Habitat for Humanity Waterloo Region ReStore — Waterloo",
+    "category": "donation",
+    "subcategory": "reuse_store",
+    "description": "Accepts selected reusable furniture and household/building items in good condition. Upholstered sofas and chairs must be smoke-, stain- and tear-free; mattresses are not accepted. Drop-off donations are accepted; call ahead or request pickup for larger donations. Check the accepted-items list before travelling.",
+    "summary_zh": "接收符合条件、状态良好的家具和家居建材。软包沙发/椅子需无烟味、污渍和破损；不收床垫。大件捐赠请先联系。",
+    "address": "120 Northfield Drive East, Waterloo, ON N2J 4G8",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Waterloo",
+    "region_id": "waterloo",
+    "hours": "Mon-Fri 09:00-18:00; Sat 09:00-17:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [
+      "furniture"
+    ],
+    "not_accepted": [
+      "mattress"
+    ],
+    "services": [],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-747-0664 ext. 221",
+    "url": "https://www.waterloorestore.habitatwr.ca/site/restore-donations-habitat-for-humanity-waterloo",
+    "source_url": "https://www.habitatwr.ca/site/restore-locations-habitat-for-humanity-waterloo",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "condition_restrictions",
+      "call_ahead"
+    ]
+  },
+  {
+    "id": "real-donate-restore-cambridge",
+    "name": "Habitat for Humanity Waterloo Region ReStore — Cambridge",
+    "category": "donation",
+    "subcategory": "reuse_store",
+    "description": "Habitat ReStore donation location. The regional accepted-items page lists selected reusable furniture and household/building materials; upholstered items must meet condition requirements and mattresses are not accepted. Check the current accepted-items list and call before transporting large donations.",
+    "summary_zh": "Habitat ReStore 捐赠点。地区接收清单包含部分可再用家具及家居建材；软包家具须符合状况要求，不收床垫。运送大件前请先联系确认。",
+    "address": "200 Preston Parkway, Cambridge, ON N3H 5N1",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "hours": "Mon-Fri 09:00-18:00; Sat 09:00-17:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [
+      "furniture"
+    ],
+    "not_accepted": [
+      "mattress"
+    ],
+    "services": [],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-653-5666",
+    "url": "https://www.waterloorestore.habitatwr.ca/site/restore-donations-habitat-for-humanity-waterloo",
+    "source_url": "https://www.habitatwr.ca/site/restore-locations-habitat-for-humanity-waterloo",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "condition_restrictions",
+      "call_ahead"
+    ]
+  },
+  {
+    "id": "real-learn-literacy-kitchener",
+    "name": "The Literacy Group of Waterloo Region — Kitchener",
+    "category": "learning",
+    "subcategory": "adult_literacy",
+    "description": "Free adult tutoring in reading, writing, math, digital skills and workplace basics. One-to-one and small-group options may be available. An intake assessment is required. Call to ask about eligibility, assessment appointments and the current class location.",
+    "summary_zh": "为成年人免费提供阅读、写作、数学、数字技能和职场基础辅导，可安排一对一或小组学习。参加前需评估，请致电了解资格、评估预约和上课地点。",
+    "address": "300 Victoria Street North, Unit 8, Kitchener, ON N2H 6R9",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Kitchener",
+    "region_id": "kitchener",
+    "hours": "Mon-Thu 09:00-21:00; Fri 09:00-16:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "math",
+      "writing",
+      "computer_skills"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-743-6090",
+    "url": "https://projectread.ca/programs-and-services/directory-of-programs/get-set-skills-education-and-training/",
+    "source_url": "https://waterloo.211centralsouth.ca/detail/73444066/agency/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_directory",
+      "adults_only",
+      "intake_assessment"
+    ]
+  },
+  {
+    "id": "real-learn-literacy-cambridge",
+    "name": "The Literacy Group of Waterloo Region — Cambridge",
+    "category": "learning",
+    "subcategory": "adult_literacy",
+    "description": "Free adult tutoring in reading, writing, math, digital skills and workplace basics. The Get SET program starts with an assessment. Call to ask about eligibility and current availability before visiting.",
+    "summary_zh": "为成年人免费提供阅读、写作、数学、数字技能和职场基础辅导。Get SET 项目需先进行评估；前往前请致电确认资格和名额。",
+    "address": "40 Ainslie Street South, 2nd Floor, Cambridge, ON N1R 3K1",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "hours": "Mon-Wed 09:00-21:00; Thu 09:00-17:00; Fri 09:00-16:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "math",
+      "writing",
+      "computer_skills"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-621-7993",
+    "url": "https://projectread.ca/programs-and-services/directory-of-programs/get-set-skills-education-and-training/",
+    "source_url": "https://waterloo.211centralsouth.ca/detail/92364352/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_directory",
+      "adults_only",
+      "intake_assessment"
+    ]
+  },
+  {
+    "id": "real-study-kpl-central",
+    "name": "Kitchener Public Library — Central Library Study Spaces",
+    "category": "study_space",
+    "subcategory": "public_library",
+    "description": "Study desks are available on a first-come basis. Some free study rooms require a library card and advance booking. Check the library website for current hours and holiday closures.",
+    "summary_zh": "自习桌位先到先用。部分免费学习室需要图书证并提前预约。开放时间和节假日安排请查看图书馆网站。",
+    "address": "85 Queen Street North, Kitchener, ON N2H 2H1",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Downtown Kitchener",
+    "region_id": "kitchener",
+    "hours": "Mon-Thu 09:00-21:00; Fri-Sat 09:00-17:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "quiet_study",
+      "group_rooms",
+      "wifi"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-743-0271",
+    "url": "https://www.kpl.org/services/rent-or-reserve-spaces/study-rooms",
+    "source_url": "https://www.kpl.org/your-library/locations-and-hours",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "some_rooms_require_library_card_and_reservation"
+    ]
+  },
+  {
+    "id": "real-study-waterloo-main",
+    "name": "Waterloo Public Library — Main Library",
+    "category": "study_space",
+    "subcategory": "public_library",
+    "description": "The Main Library has quiet study carrels, bookable study rooms and free Wi-Fi. Check the library website for current hours, room availability and holiday closures.",
+    "summary_zh": "主馆设有安静自习座位、可预约学习室，并提供免费 Wi-Fi。开放时间、学习室空位和节假日安排请查看图书馆网站。",
+    "address": "35 Albert Street, Waterloo, ON N2L 5E2",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Uptown Waterloo",
+    "region_id": "waterloo",
+    "hours": "Mon-Thu 09:30-21:00; Fri-Sat 09:30-17:30",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "quiet_study",
+      "wifi"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-886-1310",
+    "url": "https://www.wpl.ca/your-library/locations-hours/main-library/",
+    "source_url": "https://www.wpl.ca/your-library/locations-hours/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "some_study_rooms_bookable"
+    ]
+  },
+  {
+    "id": "real-study-cambridge-queens-square",
+    "name": "Idea Exchange — Queen's Square",
+    "category": "study_space",
+    "subcategory": "public_library",
+    "description": "Cambridge Public Library location with study and reading areas. Regular hours listed by the City: Monday–Thursday 9:30 a.m.–8:30 p.m., Friday–Saturday 9:30 a.m.–5:30 p.m. and Sunday 1–5 p.m. Holiday schedules may differ.",
+    "summary_zh": "剑桥公共图书馆 Queen's Square 馆，设有学习和阅读区域。节假日时间可能不同，请查看官网公告。",
+    "address": "1 North Square, Cambridge, ON N1S 2K6",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "hours": "Mon-Thu 09:30-20:30; Fri-Sat 09:30-17:30; Sun 13:00-17:00",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": false,
+    "requires_id": false,
+    "fee_cad": 0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "quiet_study",
+      "wifi"
+    ],
+    "languages": [
+      "English"
+    ],
+    "phone": "519-621-0460",
+    "url": "https://www.cambridge.ca/recreation-culture/libraries-galleries/",
+    "source_url": "https://www.cambridge.ca/recreation-culture/libraries-galleries/",
+    "last_verified_at": "2026-10-12",
+    "is_sample": false,
+    "tags": [
+      "official_source"
+    ]
+  },
+  {
+    "id": "real-health-public-dental-clinic-waterloo",
+    "name": "Region of Waterloo Public Health — Dental Clinic (Waterloo)",
+    "category": "healthcare",
+    "subcategory": "dental",
+    "description": "Public Health dental care for Waterloo Region residents who meet the financial eligibility requirements and are not eligible for the Canadian Dental Care Plan. Eligible children 17 and under can receive basic services at no charge. Adult services are limited; contact Public Health to confirm eligibility and book.",
+    "summary_zh": "服务对象为居住在滑铁卢地区、符合收入要求且不符合加拿大牙科护理计划资格的人士。符合条件的 17 岁及以下儿童可免费接受基础牙科服务。成人服务有限，请联系确认资格并预约。",
+    "address": "99 Regina Street South, Waterloo, ON",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Waterloo",
+    "region_id": "waterloo",
+    "hours": "",
+    "eligibility": [
+      "low_income"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": null,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "dental"
+    ],
+    "languages": [],
+    "phone": "519-575-4400 ext. 3086",
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics",
+    "source_url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics",
+    "last_verified_at": "2026-10-13",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "income_eligibility",
+      "eligibility_varies",
+      "appointment_required"
+    ]
+  },
+  {
+    "id": "real-health-public-dental-clinic-cambridge",
+    "name": "Region of Waterloo Public Health — Dental Clinic (Cambridge)",
+    "category": "healthcare",
+    "subcategory": "dental",
+    "description": "Public Health dental care for Waterloo Region residents who meet the financial eligibility requirements and are not eligible for the Canadian Dental Care Plan. Eligible children 17 and under can receive basic services at no charge. Adult services are limited; contact Public Health to confirm eligibility and book.",
+    "summary_zh": "服务对象为居住在滑铁卢地区、符合收入要求且不符合加拿大牙科护理计划资格的人士。符合条件的 17 岁及以下儿童可免费接受基础牙科服务。成人服务有限，请联系确认资格并预约。",
+    "address": "150 Main Street, Cambridge, ON",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "hours": "",
+    "eligibility": [
+      "low_income"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": null,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "dental"
+    ],
+    "languages": [],
+    "phone": "519-575-4400 ext. 3086",
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics",
+    "source_url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/dental-health/public-health-dental-clinics",
+    "last_verified_at": "2026-10-13",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "income_eligibility",
+      "eligibility_varies",
+      "appointment_required"
+    ]
+  },
+  {
+    "id": "real-health-public-vaccine-clinics-region",
+    "name": "Region of Waterloo Public Health — Vaccine Clinic (Kitchener)",
+    "category": "healthcare",
+    "subcategory": "vaccination",
+    "description": "Public Health offers vaccine appointments at its Kitchener clinic. Eligibility and available vaccines depend on the vaccine and your circumstances. Check the booking page for current availability and eligibility before travelling.",
+    "summary_zh": "地区公共卫生局在基奇纳提供疫苗预约。可接种疫苗和申请资格因疫苗种类及个人情况而异。出发前请查看预约页面，确认名额和资格。",
+    "address": "20 Weber Street East, Kitchener, ON N2H 1C3",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Kitchener",
+    "region_id": "kitchener",
+    "hours": "",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": null,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "vaccination"
+    ],
+    "languages": [],
+    "phone": "519-575-4400",
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/vaccines/",
+    "source_url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/vaccines/",
+    "last_verified_at": "2026-10-13",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "eligibility_varies",
+      "appointment_only"
+    ],
+    "locations": []
+  },
+  {
+    "id": "real-health-public-vaccine-clinics-cambridge",
+    "name": "Region of Waterloo Public Health — Vaccine Clinic (Cambridge)",
+    "category": "healthcare",
+    "subcategory": "vaccination",
+    "description": "Public Health offers vaccine appointments at its Cambridge clinic. Eligibility and available vaccines depend on the vaccine and your circumstances. Check the booking page for current availability and eligibility before travelling.",
+    "summary_zh": "地区公共卫生局在剑桥提供疫苗预约。可接种疫苗和申请资格因疫苗种类及个人情况而异。出发前请查看预约页面，确认名额和资格。",
+    "address": "150 Main Street, Cambridge, ON N1R 6P9",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "hours": "",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": null,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "vaccination"
+    ],
+    "languages": [],
+    "phone": "519-575-4400",
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/vaccines/",
+    "source_url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/vaccines/",
+    "last_verified_at": "2026-10-13",
+    "is_sample": false,
+    "tags": [
+      "official_source",
+      "eligibility_varies",
+      "appointment_only"
+    ],
+    "locations": []
+  },
+  {
+    "category": "healthcare",
+    "subcategory": "sexual_health",
+    "hours": "",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": 0.0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "sexual_health"
+    ],
+    "languages": [],
+    "tags": [
+      "official_source",
+      "eligibility_varies",
+      "appointment_only"
+    ],
+    "phone": "519-575-4400",
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/",
+    "source_url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/",
+    "last_verified_at": "2026-10-13",
+    "is_sample": false,
+    "id": "real-health-sexual-health-waterloo",
+    "name": "Region of Waterloo Public Health — Sexual Health Clinic (Waterloo)",
+    "description": "Public Health offers confidential sexual health services, including STI testing and treatment, contraception, pregnancy-related services and sexual-health vaccines. The Waterloo clinic is at 99 Regina Street South. Appointments are required; eligibility and the right clinic depend on the service. Services are free, and most do not require a health card. Confirm the location when booking.",
+    "summary_zh": "公共卫生局提供保密的性健康服务，包括性传播感染检测与治疗、避孕、妊娠相关服务和性健康疫苗。Waterloo诊所地址为 99 Regina Street South。须预约；服务资格和就诊地点因项目而异，请预约时确认。服务免费，且多数项目无需健康卡。",
+    "address": "99 Regina Street South, Waterloo, ON",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Waterloo",
+    "region_id": "waterloo",
+    "locations": []
+  },
+  {
+    "category": "healthcare",
+    "subcategory": "sexual_health",
+    "hours": "",
+    "eligibility": [
+      "anyone"
+    ],
+    "requires_appointment": true,
+    "requires_id": false,
+    "fee_cad": 0.0,
+    "accepted_items": [],
+    "not_accepted": [],
+    "services": [
+      "sexual_health"
+    ],
+    "languages": [],
+    "tags": [
+      "official_source",
+      "eligibility_varies",
+      "appointment_only"
+    ],
+    "phone": "519-575-4400",
+    "url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/",
+    "source_url": "https://www.regionofwaterloo.ca/programs-and-services/public-health/sexual-health-services/",
+    "last_verified_at": "2026-10-13",
+    "is_sample": false,
+    "id": "real-health-sexual-health-cambridge",
+    "name": "Region of Waterloo Public Health — Sexual Health Clinic (Cambridge)",
+    "description": "Public Health offers confidential sexual health services, including STI testing and treatment, contraception, pregnancy-related services and sexual-health vaccines. The Cambridge clinic is at 150 Main Street. Appointments are required; eligibility and the right clinic depend on the service. Services are free, and most do not require a health card. Confirm the location when booking.",
+    "summary_zh": "公共卫生局提供保密的性健康服务，包括性传播感染检测与治疗、避孕、妊娠相关服务和性健康疫苗。Cambridge诊所地址为 150 Main Street。须预约；服务资格和就诊地点因项目而异，请预约时确认。服务免费，且多数项目无需健康卡。",
+    "address": "150 Main Street, Cambridge, ON",
+    "lat": null,
+    "lng": null,
+    "neighborhood": "Cambridge",
+    "region_id": "cambridge",
+    "locations": []
+  }
 ]

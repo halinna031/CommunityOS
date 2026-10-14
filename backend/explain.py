@@ -48,19 +48,19 @@ def render_signal(sig: dict, lang: str) -> str:
             return f"明确接收：{_items(lang, p['items'])}" if zh else f"Explicitly accepts: {_items(lang, p['items'])}"
         return f"提供：{_items(lang, p['items'])}" if zh else f"Offers: {_items(lang, p['items'])}"
     if c == "unconfirmed_needs":
-        return f"未明确说明是否提供：{_items(lang, p['items'])}" if zh else f"Doesn't confirm: {_items(lang, p['items'])}"
+        return f"资料未说明是否提供：{_items(lang, p['items'])}" if zh else f"The listing does not say whether it offers: {_items(lang, p['items'])}"
     if c == "category_ok":
         return f"属于「{CATEGORY['zh'][p['category']]}」类" if zh else f"Category: {CATEGORY['en'][p['category']]}"
     if c == "open_to_all":
         return "对所有人开放" if zh else "Open to everyone"
     if c == "eligible":
-        return f"你符合资格（面向{_who(lang, p['who'])}）" if zh else f"You qualify (for {_who(lang, p['who'])})"
+        return f"服务对象包括：{_who(lang, p['who'])}" if zh else f"Available to {_who(lang, p['who'])}"
     if c == "restricted_unknown":
-        return f"仅限{_who(lang, p['who'])}，请确认你是否符合" if zh else f"Limited to {_who(lang, p['who'])}; check you qualify"
+        return f"有资格限制（{_who(lang, p['who'])}），建议先向机构确认" if zh else f"Eligibility rules apply ({_who(lang, p['who'])}); confirm with the provider"
     if c == "restricted":
         return f"仅限{_who(lang, p['who'])}，你可能不符合" if zh else f"Only for {_who(lang, p['who'])}; you may not qualify"
     if c == "speaks_zh":
-        return "提供中文服务" if zh else "Mandarin-speaking staff/support"
+        return "提供中文服务" if zh else "Mandarin service available"
     if c == "distance":
         base = "校园" if p["from_campus"] else ("所选地区中心" if p.get("from_region") else "你")
         if zh:
@@ -79,9 +79,11 @@ def render_signal(sig: dict, lang: str) -> str:
         return "营业时间不确定，请先联系" if zh else "Hours unclear; contact first"
     if c == "verified":
         d = p["days"]
-        return f"{d} 天前核实" if zh else f"Verified {d} days ago"
+        if zh:
+            return "今天核实" if d == 0 else f"{d} 天前核实"
+        return "Verified today" if d == 0 else f"Verified 1 day ago" if d == 1 else f"Verified {d} days ago"
     if c == "reports_pending":
-        return f"{p['n']} 位用户反馈信息可能已过时" if zh else f"{p['n']} user report(s) say this may be outdated"
+        return f"有 {p['n']} 条反馈称信息可能已过时" if zh else f"{p['n']} report(s) flag this information as possibly outdated"
     if c == "needs_appointment":
         return "需要预约" if zh else "Appointment required"
     if c == "walk_in":
@@ -90,6 +92,11 @@ def render_signal(sig: dict, lang: str) -> str:
         return "需要出示证件" if zh else "ID required"
     if c == "has_fee":
         return f"收费 ${p['fee']:g}" if zh else f"Fee: ${p['fee']:g}"
+    if c == "fee_unknown":
+        return "资料未注明费用，请联系机构确认" if zh else "Fee not listed; contact the provider to confirm"
+    if c == "violates_free":
+        return ("费用尚未确认，不一定免费" if p.get("unknown") else "这项服务可能收费") if zh else (
+            "Fee is unknown; this may not be free" if p.get("unknown") else "This service may have a fee")
     if c == "violates_open_now":
         return "不符合你的「现在营业」要求" if zh else "Doesn't meet your 'open now' request"
     if c == "violates_24h":
@@ -106,6 +113,29 @@ _PRIORITY = ["has_needs", "category_ok", "eligible", "open_now", "distance", "sp
 
 
 def build_summary(res: dict, lang: str) -> str:
+    # Healthcare records often have appointment rules and unconfirmed fees.
+    # Present those as a short note instead of stitched scoring labels.
+    if res.get("category") == "healthcare":
+        zh = lang == "zh"
+        parts = []
+        services = res.get("services") or []
+        if services:
+            service_names = {
+                "zh": {"dental": "牙科服务", "sexual_health": "性健康服务", "vaccination": "疫苗接种"},
+                "en": {"dental": "dental care", "sexual_health": "sexual health services", "vaccination": "vaccinations"},
+            }
+            labels = [service_names[lang].get(key, ITEM[lang].get(key, key)) for key in services]
+            names = ("、" if zh else " and ").join(labels)
+            parts.append(f"提供{names}" if zh else f"Offers {names}")
+        distance = next((s for s in res["rank_info"]["signals"] if s["code"] == "distance"), None)
+        if distance:
+            p = distance["p"]
+            origin = "所选地区中心" if p.get("from_region") else ("校园" if p.get("from_campus") else "你")
+            parts.append(f"离{origin}约 {p['km']} 公里" if zh else f"About {p['km']} km away")
+        if any(s["code"] == "reports_pending" for s in res["rank_info"]["signals"]):
+            parts.append("有用户反馈信息可能已过时，请先核实" if zh else "User reports flag some details as possibly outdated")
+        return "；".join(parts) + ("。" if zh else ".")
+
     sigs = res["rank_info"]["signals"]
     ok = [s for s in sigs if s["level"] == "ok"]
     ok.sort(key=lambda s: _PRIORITY.index(s["code"]) if s["code"] in _PRIORITY else 99)
@@ -115,7 +145,7 @@ def build_summary(res: dict, lang: str) -> str:
     tail = ""
     if warn:
         w = [render_signal(s, lang) for s in warn[:2]]
-        tail = ("。注意：" + "；".join(w)) if lang == "zh" else (". Heads-up: " + "; ".join(w))
+        tail = ("请留意：" + "；".join(w)) if lang == "zh" else (" Please note: " + "; ".join(w))
     return head + tail + ("。" if lang == "zh" else ".")
 
 
@@ -156,6 +186,6 @@ EMERGENCY = {
            "lines": ["Immediate danger: call 911", "Suicide/crisis support: call or text 988 (Canada-wide, 24/7)", "Find community services: dial 211 (or visit 211ontario.ca)"]},
 }
 FALLBACK = {
-    "zh": "没有找到可靠匹配的资源。我们不会硬凑答案——你可以拨打 211（或访问 211ontario.ca）让工作人员帮你查找，也可以换个说法再试一次。",
-    "en": "We couldn't find a reliable match, and we won't pad the list with guesses. You can dial 211 (or visit 211ontario.ca) for a person to help, or try rephrasing.",
+    "zh": "你可以更换搜索词，或拨打 211（也可访问 211ontario.ca）查询其他社区服务。",
+    "en": "Try a different search, or call 211 or visit 211ontario.ca to find other local services.",
 }

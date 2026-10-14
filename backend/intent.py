@@ -1,9 +1,7 @@
 """Step 1: understand the request -> structured intent.
 
-Two paths that produce the *same* schema:
-  * Gemini (if GEMINI_API_KEY is set): robust to slang, any language, typos.
-  * Rules (always available): bilingual EN/ZH lexicon. Also the fallback if the API call fails,
-    and it fills any field the LLM left empty.
+Search intent is parsed locally with a bilingual EN/ZH lexicon. Gemini is
+reserved for the separate webpage-ingestion workflow.
 
 Intent schema
 {
@@ -65,9 +63,9 @@ NEEDS = {
     "primary_care": (["family doctor", "family physician", "primary care", "general practitioner", "家庭医生", "家庭医师", "全科"], "family doctor primary care"),
     "walk_in_clinic": (["walk-in clinic", "walk in clinic", "walk-in doctor", "urgent care clinic", "免预约诊所", "无需预约门诊"], "walk-in clinic urgent care"),
     "mental_health": (["mental health", "counselling", "counseling", "psychologist", "therapy", "心理健康", "心理咨询", "心理辅导", "心理治疗", "精神健康"], "mental health counselling therapy"),
-    "dental": (["dentist", "dental", "牙医", "牙科", "口腔"], "dental dentist oral health"),
-    "sexual_health": (["sexual health", "sti", "sexually transmitted", "birth control", "性健康", "性传播", "避孕", "生殖健康"], "sexual health STI testing contraception"),
-    "vaccination": (["vaccine", "vaccination", "immunization", "疫苗", "接种", "免疫接种"], "vaccination immunization vaccines"),
+    "dental": (["dentist", "dental", "toothache", "tooth pain", "dental clinic", "oral care", "牙医", "牙科", "口腔", "看牙", "看牙医", "牙疼", "牙齿疼"], "dental dentist oral health"),
+    "sexual_health": (["sexual health", "sti", "std", "sti test", "sti testing", "std test", "std testing", "sexually transmitted", "birth control", "性健康", "性病", "性病检测", "性病筛查", "性传播", "避孕", "生殖健康"], "sexual health STI STD testing contraception"),
+    "vaccination": (["vaccine", "vaccination", "immunization", "flu shot", "vaccine shot", "疫苗", "打疫苗", "接种", "免疫接种", "打针"], "vaccination immunization vaccines"),
     "pharmacy": (["pharmacy", "pharmacist", "prescription", "药房", "药剂师", "处方"], "pharmacy pharmacist prescriptions"),
     "vision_care": (["optometrist", "eye exam", "vision care", "eyeglasses", "眼科", "视力检查", "配眼镜"], "vision care optometrist eye exam"),
     "prenatal": (["prenatal", "pregnancy care", "midwife", "产前", "孕期", "助产士"], "prenatal pregnancy care midwife"),

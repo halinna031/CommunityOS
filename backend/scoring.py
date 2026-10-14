@@ -98,7 +98,7 @@ def score_resource(res: dict, intent: dict, *, now: datetime, semantic: float, n
     elif ident & elig:
         comp["eligibility"] = 1.0
         signals.append({"level": "ok", "code": "eligible", "p": {"who": sorted(ident & elig)}})
-    elif not ident:
+    elif not ident or res.get("category") == "healthcare":
         comp["eligibility"] = 0.6
         signals.append({"level": "warn", "code": "restricted_unknown", "p": {"who": sorted(elig)}})
     else:
@@ -159,9 +159,13 @@ def score_resource(res: dict, intent: dict, *, now: datetime, semantic: float, n
     if res["requires_id"]:
         barrier -= 0.3
         signals.append({"level": "warn", "code": "needs_id", "p": {}})
-    if res["fee_cad"] > 0:
+    fee = res.get("fee_cad")
+    if fee is not None and fee > 0:
         barrier -= 0.3
-        signals.append({"level": "warn", "code": "has_fee", "p": {"fee": res["fee_cad"]}})
+        signals.append({"level": "warn", "code": "has_fee", "p": {"fee": fee}})
+    elif fee is None:
+        barrier -= 0.1
+        signals.append({"level": "warn", "code": "fee_unknown", "p": {}})
     comp["barrier"] = max(0.0, barrier)
 
     total = sum(W[k] * comp[k] for k in W) * 100

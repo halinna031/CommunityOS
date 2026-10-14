@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 from . import config
 
-LIST_FIELDS = ("eligibility", "accepted_items", "not_accepted", "services", "languages", "tags")
+LIST_FIELDS = ("eligibility", "accepted_items", "not_accepted", "services", "languages", "tags", "locations")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS resources (
@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS resources (
   summary_zh TEXT,
   address TEXT,
   lat REAL, lng REAL,
+  locations TEXT NOT NULL DEFAULT '[]', -- JSON list of service locations for multi-site resources
   neighborhood TEXT,
   region_id TEXT NOT NULL DEFAULT 'waterloo_region',
   hours TEXT,
@@ -51,7 +52,7 @@ CREATE INDEX IF NOT EXISTS idx_reports_resource ON reports(resource_id, status);
 EDITABLE_FIELDS = {
     "name", "description", "summary_zh", "address", "lat", "lng", "hours", "phone", "url", "region_id",
     "requires_appointment", "requires_id", "fee_cad",
-    "eligibility", "accepted_items", "not_accepted", "services", "languages", "tags",
+    "eligibility", "accepted_items", "not_accepted", "services", "languages", "tags", "locations",
 }
 
 
@@ -95,6 +96,8 @@ def init_db(path=None, seed_path=None, reset: bool = False) -> None:
             conn.execute("UPDATE resources SET region_id='cambridge' WHERE lower(coalesce(neighborhood,'') || ' ' || coalesce(address,'')) LIKE '%cambridge%'")
             conn.execute("UPDATE resources SET region_id='kitchener' WHERE lower(coalesce(neighborhood,'') || ' ' || coalesce(address,'')) LIKE '%kitchener%'")
             conn.execute("UPDATE resources SET region_id='waterloo' WHERE lower(coalesce(neighborhood,'') || ' ' || coalesce(address,'')) LIKE '%waterloo%' AND lower(coalesce(neighborhood,'') || ' ' || coalesce(address,'')) NOT LIKE '%kitchener%'")
+        if "locations" not in columns:
+            conn.execute("ALTER TABLE resources ADD COLUMN locations TEXT NOT NULL DEFAULT '[]'")
         if conn.execute("SELECT COUNT(*) FROM resources").fetchone()[0] == 0:
             seed = json.loads((seed_path or config.SEED_PATH).read_text(encoding="utf-8"))
             for r in seed:
@@ -111,7 +114,7 @@ def upsert_resource(conn, r: dict) -> None:
     for f in LIST_FIELDS:
         row[f] = json.dumps(row.get(f, []), ensure_ascii=False)
     cols = ["id", "name", "category", "subcategory", "description", "summary_zh", "address", "lat", "lng",
-            "neighborhood", "region_id", "hours", "eligibility", "requires_appointment", "requires_id", "fee_cad",
+            "neighborhood", "region_id", "hours", "eligibility", "requires_appointment", "requires_id", "fee_cad", "locations",
             "accepted_items", "not_accepted", "services", "languages", "tags", "phone", "url",
             "source_url", "last_verified_at", "is_sample"]
     vals = [row.get(c) for c in cols]

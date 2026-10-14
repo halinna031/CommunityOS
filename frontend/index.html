@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -98,6 +98,8 @@ summary{cursor:pointer;color:var(--blue);padding:2px 0}
 .linkbtn{background:none;border:0;color:var(--blue);text-decoration:underline;cursor:pointer;padding:0;font-size:13px}
 .empty{color:var(--muted);padding:30px 0}
 .pin{background:var(--ink);color:var(--card);border:2px solid var(--yellow);border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-weight:700;font-size:13px}
+.pin-wrap{position:relative;display:flex;width:max-content;height:28px}
+.pin-many{width:auto!important;min-width:28px;padding:0 6px;border-radius:16px!important;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -132,51 +134,51 @@ summary{cursor:pointer;color:var(--blue);padding:2px 0}
 <script>
 /* ------------------------------------------------------------------ i18n */
 const T = {
- zh:{region:"按地区查找社区资源",h1:"说说你的情况，我来找地方",ph:"例如：我有一张旧沙发想捐掉 / 哪里有免费辅导 / 我需要安静的自习地方",
+ zh:{region:"按地区查找社区资源",h1:"你在找什么公共资源？",ph:"例如：我有一张旧沙发想捐掉 / 哪里有免费学习辅导 / 我需要安静的自习地方",
   go:"查找资源",going:"查找中…",loc:"使用我的位置",locOn:"已使用位置",admin:"管理页",
   sample:"当前为示例数据（机构为虚构），用于演示。上线前请替换为已核实的真实资源。",
-  understood:"我们的理解",none:"没有找到可靠匹配",cat:{food_assistance:"食物援助",donation:"物品捐赠",learning:"免费学习/辅导",study_space:"自习空间",healthcare:"医疗服务"},
+  understood:"搜索条件",none:"数据库中没有查到相关资源",cat:{food_assistance:"食物援助",donation:"物品捐赠",learning:"免费学习/辅导",study_space:"自习空间",healthcare:"医疗服务"},
   cons:{free:"免费",open_now:"现在营业",open_24h:"24小时开放",no_id:"无需证件",no_appointment:"无需预约",near_campus:"靠近校园"},
   id:{students:"学生",newcomers:"新移民",low_income:"低收入",seniors:"老年人"},
-  relaxNeeds:"没有完全符合的结果，已放宽条件，显示同类资源。请留意每张卡片上的提醒。",
-  relaxCons:c=>`没有同时满足所有要求的结果，已放宽：${c}。`,
+  relaxNeeds:"没有完全符合条件的资源，以下是相近结果。",
+  relaxCons:c=>`没有资源同时满足所有条件。以下结果可能不符合：${c}。`,
   emerg:"紧急信息",score:"匹配分",breakdown:"打分明细",hours:"营业时间",days:["周一","周二","周三","周四","周五","周六","周日"],
-  closedDay:"休息",appt:"需预约",walk:"免预约",idreq:"需证件",free:"免费",fee:"收费",lang:"语言",verified:"核实于",source:"信息来源",
-  call:"致电",report:"信息有误？反馈",reportWhy:"哪里不对？",send:"提交反馈",cancel:"取消",note:"补充说明（可选）",
+  closedDay:"休息",appt:"需预约",walk:"免预约",idreq:"需证件",free:"免费",fee:"收费",feeUnknown:"费用请咨询机构",lang:"语言",verified:"核实于",source:"信息来源",
+  call:"致电",report:"反馈信息问题",reportWhy:"问题类型",send:"提交反馈",cancel:"取消",note:"补充说明（可选）",
   reasons:{closed:"已关门/停止服务",hours_changed:"营业时间变了",items_changed:"不再接收/提供该项",wrong_address:"地址错误",other:"其他"},
-  thanks:n=>`已收到，谢谢！目前有 ${n} 条未处理的反馈。`,dup:"你已反馈过这条信息，我们会尽快核实。",
-  review:n=>`${n} 位用户反馈这条信息可能已过时，排名已降低，等待核实。`,conf:"可信度",
-  comp:{match:"需求匹配",eligibility:"资格",distance:"距离",open:"营业状态",freshness:"信息新鲜度",barrier:"使用门槛"},
-  pts:"分",err:"出错了，请稍后重试。",km:"km"},
- en:{region:"Find community resources by region",h1:"Tell us what you need, we'll find the place",ph:"e.g. I want to donate an old sofa / where can I get free tutoring / I need a quiet place to study",
+  thanks:n=>`反馈已提交。这条资源目前有 ${n} 条待处理反馈。`,dup:"你已经提交过这条资源的反馈。",
+  review:n=>`有 ${n} 条反馈称信息可能已过时；核实前，搜索排序会降低。`,conf:"可信度",
+  comp:{match:"需求匹配",eligibility:"资格",distance:"距离",open:"营业状态",freshness:"信息更新情况",barrier:"使用门槛"},
+  pts:"分",err:"暂时无法完成搜索，请稍后重试。",km:"km",confidence:"信息可信度",hoursUnknown:"营业时间未确认"},
+ en:{region:"Find community resources by region",h1:"What community resource are you looking for?",ph:"e.g. I want to donate an old sofa / where can I get free tutoring / I need a quiet place to study",
   go:"Find resources",going:"Searching…",loc:"Use my location",locOn:"Using location",admin:"Admin",
   sample:"Showing sample data (organizations are fictional) for demo purposes. Replace with verified listings before launch.",
-  understood:"What we understood",none:"No reliable match found",cat:{food_assistance:"Food assistance",donation:"Donations",learning:"Free learning help",study_space:"Study spaces",healthcare:"Healthcare services"},
+  understood:"Search filters",none:"No matching resources found in the database",cat:{food_assistance:"Food assistance",donation:"Donations",learning:"Free learning help",study_space:"Study spaces",healthcare:"Healthcare services"},
   cons:{free:"free",open_now:"open now",open_24h:"open 24h",no_id:"no ID",no_appointment:"no appointment",near_campus:"near campus"},
   id:{students:"student",newcomers:"newcomer",low_income:"low income",seniors:"senior"},
-  relaxNeeds:"No exact match, so we widened the search to similar resources. Check the notes on each card.",
-  relaxCons:c=>`Nothing met every request, so we relaxed: ${c}.`,
+  relaxNeeds:"No exact match. Here are some similar resources.",
+  relaxCons:c=>`No resources met all your filters. These results may not meet: ${c}.`,
   emerg:"Urgent help",score:"Match",breakdown:"Score breakdown",hours:"Hours",days:["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
-  closedDay:"Closed",appt:"Appointment",walk:"Walk-in",idreq:"ID needed",free:"Free",fee:"Fee",lang:"Languages",verified:"Verified",source:"Source",
-  call:"Call",report:"Something wrong? Report",reportWhy:"What's wrong?",send:"Send report",cancel:"Cancel",note:"Details (optional)",
+  closedDay:"Closed",appt:"Appointment",walk:"Walk-in",idreq:"ID needed",free:"Free",fee:"Fee",feeUnknown:"Ask provider about fees",lang:"Languages",verified:"Verified",source:"Source",
+  call:"Call",report:"Report an issue",reportWhy:"Issue type",send:"Submit report",cancel:"Cancel",note:"Additional details (optional)",
   reasons:{closed:"Closed / no longer operating",hours_changed:"Hours changed",items_changed:"No longer accepts/offers this",wrong_address:"Wrong address",other:"Other"},
-  thanks:n=>`Thanks! ${n} open report(s) on this listing now.`,dup:"You already reported this one. We'll verify it soon.",
-  review:n=>`${n} people say this may be outdated. Ranked lower until verified.`,conf:"Confidence",
-  comp:{match:"Need match",eligibility:"Eligibility",distance:"Distance",open:"Open status",freshness:"Freshness",barrier:"Barriers"},
-  pts:"pts",err:"Something went wrong. Please try again.",km:"km"}
+  thanks:n=>`Report submitted. This listing now has ${n} open report(s).`,dup:"You've already reported this listing.",
+  review:n=>`${n} report(s) flag this listing as possibly outdated. It will appear lower in search until verified.`,conf:"Confidence",
+  comp:{match:"Need match",eligibility:"Eligibility",distance:"Distance",open:"Open status",freshness:"Last updated",barrier:"Barriers"},
+  pts:"pts",err:"Search is temporarily unavailable. Please try again.",km:"km",confidence:"Source confidence",hoursUnknown:"Hours unknown"}
 };
-const EXAMPLES = {zh:["我有一张旧沙发想捐掉","旧笔记本电脑怎么捐","哪里有免费的数学辅导","我刚来加拿大，需要清真食物","安静的自习的地方，晚上也开","我想找牙科服务","我需要性健康或疫苗服务"],
-  en:["I need somewhere to donate furniture","I have an old laptop to donate","Free tutoring for calculus, open now","I'm a student short on groceries near campus","A quiet place to study","Find dental services","Find sexual health or vaccination services"]};
+const EXAMPLES = {zh:["我有一张旧沙发想捐掉","哪里有免费的数学辅导","安静的自习场所","我想找牙科服务","我需要疫苗服务"],
+  en:["I need somewhere to donate furniture","Free tutoring","I'm a student short on groceries near campus","A quiet place to study","Find dental services","Find vaccination services"]};
 const COLORS = {match:"#1646b8",eligibility:"#5b87e6",distance:"#2a9d8f",open:"#8fd3b0",freshness:"#f5b700",barrier:"#b8c4c8"};
 const ICON = {ok:"✓",warn:"!",bad:"✕",info:"i"};
 
-let lang = (navigator.language||"zh").startsWith("zh") ? "zh" : "en";
-let useLoc = false, loc = null, map = null, markers = {}, userMarker = null, lastData = null;
+let lang = "en";
+let useLoc = false, loc = null, map = null, markers = {}, mapMarkerLayer = null, userMarker = null, lastData = null;
 let regions = [], selectedRegion = "waterloo_region";
 const GEOCODE_CACHE_KEY = "communityos-geocode-v1";
 let geocodeCache = {};
 try { geocodeCache = JSON.parse(localStorage.getItem(GEOCODE_CACHE_KEY) || "{}"); } catch(e) {}
-let geocodeQueue = Promise.resolve(), lastGeocodeAt = 0;
+let geocodeQueue = Promise.resolve(), lastGeocodeAt = 0, geocodePending = new Set();
 let clientId = "";
 try{ clientId = localStorage.getItem("cid") || (crypto.randomUUID?crypto.randomUUID():String(Math.random()).slice(2)); localStorage.setItem("cid",clientId);}catch(e){ clientId = String(Math.random()).slice(2); }
 
@@ -214,7 +216,7 @@ async function search(){
     if(!r.ok) throw new Error((await r.json()).detail || r.status);
     lastData = await r.json();
     lang = lastData.intent.language; applyLang();   // answer in the language the user wrote
-  }catch(e){ $("#out").innerHTML = `<div class="notice emerg">${esc(t().err)} ${esc(e.message)}</div>`; }
+  }catch(e){ $("#out").innerHTML = `<div class="notice emerg">${esc(t().err)}</div>`; }
   finally{ $("#go").disabled=false; $("#go").textContent=t().go; }
 }
 
@@ -238,13 +240,14 @@ function render(d){
 function card(r){
   const tt = t(), st = r.open_status;
   const pill = st.is_open===true ? `<span class="pill open">${lang==="zh"?"营业中":"Open"}</span>` :
-               st.is_open===false ? `<span class="pill closed">${lang==="zh"?"未营业":"Closed"}</span>` : `<span class="pill unk">${lang==="zh"?"需确认":"Check"}</span>`;
+               st.is_open===false ? `<span class="pill closed">${lang==="zh"?"未营业":"Closed"}</span>` : `<span class="pill unk">${tt.hoursUnknown}</span>`;
   const bar = Object.keys(COLORS).map(k=>`<span title="${esc(tt.comp[k])} ${r.weighted[k]}" style="width:${r.weighted[k]}%;background:${COLORS[k]}"></span>`).join("");
   const bd = Object.keys(COLORS).map(k=>`<span class="sw" style="background:${COLORS[k]}"></span><span>${esc(tt.comp[k])} (${Math.round(r.weights[k]*100)}%)</span><b>${r.weighted[k]} ${esc(tt.pts)}</b>`).join("");
   const hrs = r.hours_table.map((h,ix)=>`<tr><td>${tt.days[ix]}</td><td>${h.ranges.length?esc(h.ranges.join(", ")):`<span style="color:var(--muted)">${tt.closedDay}</span>`}</td></tr>`).join("");
   const sigs = r.signals.map(s=>`<li class="${s.level}"><span class="ic" aria-hidden="true">${ICON[s.level]}</span><span>${esc(s.text)}</span></li>`).join("");
   const facts = [
-    r.requires_appointment ? tt.appt : tt.walk, r.requires_id ? tt.idreq : null, r.fee_cad>0 ? `${tt.fee} $${r.fee_cad}` : tt.free,
+    r.requires_appointment ? tt.appt : tt.walk, r.requires_id ? tt.idreq : null,
+    r.fee_cad===null || r.fee_cad===undefined ? tt.feeUnknown : r.fee_cad>0 ? `${tt.fee} $${r.fee_cad}` : tt.free,
     r.languages.length ? `${tt.lang}: ${r.languages.join(", ")}` : null].filter(Boolean).map(esc).join(" · ");
   const review = r.needs_review ? `<div class="notice relax" style="margin:10px 0 0">${esc(tt.review(r.open_reports))}</div>` : "";
   return `<article class="card ${r.needs_review?"review":""}" id="card-${r.id}" data-id="${r.id}">
@@ -260,7 +263,7 @@ function card(r){
     <div class="facts">${facts}</div>
     ${review}
     <div class="src">
-      <span>${esc(tt.verified)} ${esc((r.last_verified_at||"").slice(0,10))} · ${esc(tt.conf)} ${Math.round(r.confidence*100)}%</span>
+      <span>${esc(tt.verified)} ${esc((r.last_verified_at||"").slice(0,10))} · ${esc(tt.confidence)} ${Math.round(r.confidence*100)}%</span>
       ${r.phone?`<a href="tel:${esc(r.phone)}">${esc(tt.call)} ${esc(r.phone)}</a>`:""}
       <a href="${esc(r.source_url)}" target="_blank" rel="noopener">${esc(tt.source)}</a>
       <button class="linkbtn" data-report="${r.id}">${esc(tt.report)}</button>
@@ -308,51 +311,149 @@ function drawMap(results){
   if(!map){
     map = L.map("map").setView(loc ? [loc.lat,loc.lng] : center, loc ? 13 : selectedRegion==="waterloo_region"?11:13);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(map);
+    mapMarkerLayer = L.layerGroup().addTo(map);
   }
-  Object.values(markers).forEach(m=>m.remove()); markers = {};
-  const points = [];
+  // Clear one dedicated Leaflet layer on every redraw. This also removes stale
+  // markers if the marker index changes between results or geocoding callbacks.
+  mapMarkerLayer.clearLayers(); markers = {};
+  const groups = new Map();
+  const serviceAreas = [];
   results.forEach(r=>{
-    const point = Number.isFinite(Number(r.lat)) && r.lat!==null && r.lng!==null && Number.isFinite(Number(r.lng))
-      ? [Number(r.lat),Number(r.lng)] : geocodeCache[geocodeKey(r.address)];
-    if(!point) { if(canGeocode(r.address)) queueGeocode(r.address); return; }
-    const m = L.marker(point,{icon:L.divIcon({className:"",html:`<div class="pin">${r.rank}</div>`,iconSize:[28,28],iconAnchor:[14,14]})}).addTo(map);
-    m.bindTooltip(r.name); m.on("click",()=>{ document.getElementById("card-"+r.id)?.scrollIntoView({behavior:"smooth",block:"center"}); hl(r.id,true); setTimeout(()=>hl(r.id,false),1500); });
-    m.on("mouseover",()=>hl(r.id,true)); m.on("mouseout",()=>hl(r.id,false));
-    markers[r.id] = m;
+    const locations = Array.isArray(r.locations) && r.locations.length ? r.locations : [r];
+    let foundLocation = false;
+    locations.forEach((location,index)=>{
+      const address = location.address || r.address;
+      const lat = location.lat ?? (index===0 ? r.lat : null), lng = location.lng ?? (index===0 ? r.lng : null);
+      const directPoint=lat!==null && lng!==null ? [Number(lat),Number(lng)] : null;
+      const canonicalKey=placeKey(address);
+      const cachedPoint=cachedGeocodePoint(address);
+      const point=validPoint(directPoint)?directPoint:validPoint(cachedPoint)?cachedPoint:null;
+      if(!point) { if(canGeocode(address)) queueGeocode(address); return; }
+      if(canonicalKey && !validPoint(geocodeCache[`place:${canonicalKey}`])){
+        geocodeCache[`place:${canonicalKey}`]=point;
+        try{ localStorage.setItem(GEOCODE_CACHE_KEY,JSON.stringify(geocodeCache)); }catch(e){}
+      }
+      foundLocation = true;
+      // Normalize street address (postal code, province, unit/floor, and common
+      // street suffixes) before grouping. Geocoders can return slightly different
+      // coordinates for two spellings of the same clinic address.
+      const key = placeKey(address) || point.map(n=>Number(n).toFixed(5)).join(",");
+      if(!groups.has(key)) groups.set(key,{point,entries:[]});
+      const group=groups.get(key);
+      if(!group.entries.some(e=>e.r.id===r.id)) group.entries.push({r,location,index});
+    });
+    // This listing is a phone referral service, not a walk-in location. Show
+    // it at the selected region's centre with a distinct, explicitly labelled symbol.
+    if(!foundLocation && (r.tags||[]).includes("referral_service")) serviceAreas.push(r);
   });
+  const points = [];
+  groups.forEach(({point,entries},key)=>{
+    const label=entries.map(({r,location})=>`<button class="linkbtn" data-resource-id="${esc(r.id)}">${esc(r.name)}${location.label ? ` — ${esc(location.label)}` : ""}</button>`).join("<br>");
+    const ranks=[...new Set(entries.map(({r})=>Number(r.rank)).filter(Number.isFinite))].sort((a,b)=>a-b);
+    const pinLabel=ranks.join(",");
+    const tooltip=entries.map(({r,location})=>{
+      const hasMultipleLocations=Array.isArray(r.locations)&&r.locations.length>1;
+      return `${r.name}${hasMultipleLocations?` — ${location.label||location.address}`:""}`;
+    }).join(" | ");
+    const pinWidth=Math.max(30,pinLabel.length*8+16);
+    const m=L.marker(point,{icon:L.divIcon({className:"",html:`<div class="pin-wrap"><div class="pin${ranks.length>1?" pin-many":""}">${esc(pinLabel)}</div></div>`,iconSize:[pinWidth,30],iconAnchor:[pinWidth/2,14]})}).addTo(mapMarkerLayer);
+    m.bindTooltip(esc(tooltip));
+    m.bindPopup(`<div class="map-popup">${label}</div>`);
+    m.on("popupopen",e=>e.popup.getElement()?.querySelectorAll("[data-resource-id]").forEach(el=>el.addEventListener("click",()=>{
+      const id=el.dataset.resourceId;
+      document.getElementById("card-"+id)?.scrollIntoView({behavior:"smooth",block:"center"}); hl(id,true); setTimeout(()=>hl(id,false),1500);
+    })));
+    markers[key]=m;
+  });
+  if(serviceAreas.length){
+    const area=L.circleMarker(center,{radius:11,color:"#fff",weight:3,fillColor:"#7c3aed",fillOpacity:.95}).addTo(mapMarkerLayer);
+    area.bindTooltip(lang==="zh"?"电话转介服务覆盖该地区（非实体地址）":"Phone referral service for this region (no walk-in address)");
+    area.bindPopup(serviceAreas.map(r=>`<div><button class="linkbtn" data-resource-id="${esc(r.id)}">${esc(r.name)}</button><br><small>${lang==="zh"?"电话服务；地图点为地区中心，并非服务地点。":"Phone service; this point is the region centre, not a service location."}</small></div>`).join(""));
+    area.on("popupopen",e=>e.popup.getElement()?.querySelectorAll("[data-resource-id]").forEach(el=>el.addEventListener("click",()=>{
+      const id=el.dataset.resourceId;
+      document.getElementById("card-"+id)?.scrollIntoView({behavior:"smooth",block:"center"}); hl(id,true); setTimeout(()=>hl(id,false),1500);
+    })));
+    markers[`service-area:${serviceAreas.map(r=>r.id).join(",")}`]=area;
+  }
   if(userMarker) userMarker.remove();
   if(useLoc && loc){
     userMarker = L.circleMarker([loc.lat,loc.lng],{radius:9,color:"#fff",weight:3,fillColor:"#2563eb",fillOpacity:1}).addTo(map);
     userMarker.bindTooltip(lang==="zh"?"你的位置":"Your location");
     points.push(userMarker);
   } else userMarker = null;
-  points.push(...Object.values(markers));
+  points.push(...mapMarkerLayer.getLayers());
   if(points.length) map.fitBounds(L.featureGroup(points).getBounds().pad(0.3),{maxZoom:14});
   else map.setView(center, selectedRegion==="waterloo_region"?11:13);
   setTimeout(()=>map.invalidateSize(),50);
 }
 
 function geocodeKey(address){ return String(address||"").trim().toLowerCase(); }
-function canGeocode(address){ return /(?:^|,\s*)\d+\s+[^,]+,\s*[^,]+,\s*(ON|Ontario)\b/i.test(String(address||"")); }
+function cachedGeocodePoint(address){
+  const exact=geocodeCache[geocodeKey(address)];
+  if(validPoint(exact)) return exact;
+  const canonicalKey=placeKey(address), canonical=geocodeCache[`place:${canonicalKey}`];
+  if(validPoint(canonical)) return canonical;
+  // Reuse legacy localStorage entries written before canonical place keys existed.
+  for(const [key,point] of Object.entries(geocodeCache)){
+    if(!key.startsWith("place:") && placeKey(key)===canonicalKey && validPoint(point)) return point;
+  }
+  return null;
+}
+function canonicalGeocodeAddress(address){
+  return cleanGeocodeAddress(address).replace(/\b[A-Z]\d[A-Z]\s*\d[A-Z]\d\b/gi,"").replace(/\s+,/g,",").replace(/,\s*,/g,",").trim();
+}
+function placeKey(address){
+  return cleanGeocodeAddress(address).toLowerCase()
+    .replace(/\b[a-z]\d[a-z]\s*\d[a-z]\d\b/gi,"")
+    .replace(/\b(?:ontario|on|canada)\b/g,"")
+    .replace(/\bstreet\b|\bst\b/g,"st").replace(/\broad\b|\brd\b/g,"rd")
+    .replace(/\bavenue\b|\bave\b/g,"ave").replace(/\bdrive\b|\bdr\b/g,"dr")
+    .replace(/\bboulevard\b|\bblvd\b/g,"blvd").replace(/\bcourt\b|\bct\b/g,"ct")
+    .replace(/\bcrescent\b|\bcres\b/g,"cres").replace(/[^a-z0-9]+/g," ").trim();
+}
+function validPoint(point){
+  return Array.isArray(point) && point.length>=2 && Number.isFinite(Number(point[0])) && Number.isFinite(Number(point[1]))
+    && Math.abs(Number(point[0]))<=90 && Math.abs(Number(point[1]))<=180;
+}
+function cleanGeocodeAddress(address){
+  const text=String(address||"");
+  const level="(?:unit|suite|floor|fl|rm|room|apartment|apt|\\d+(?:st|nd|rd|th)?\\s+floor)";
+  const match=text.match(new RegExp(`(?:^|,\\s*)(\\d+\\s+[^,]+(?:,\\s*${level}\\b[^,]*)?,\\s*[^,]+,\\s*(?:ON|Ontario)\\b.*)$`,"i"));
+  return (match?.[1]||text).replace(new RegExp(`,\\s*${level}\\b[^,]*`,"i"),"").trim();
+}
+function canGeocode(address){ return /^\d+\s+.+,\s*[^,]+,\s*(ON|Ontario)\b/i.test(cleanGeocodeAddress(address)); }
 function queueGeocode(address){
-  const key=geocodeKey(address);
+  const addressKey=geocodeKey(address), key=`place:${placeKey(address)}`;
+  if(validPoint(geocodeCache[addressKey]) || validPoint(geocodeCache[key]) || geocodePending.has(key)) return;
+  geocodePending.add(key);
   geocodeQueue=geocodeQueue.then(async()=>{
-    if(geocodeCache[key]) return;
+    if(validPoint(geocodeCache[addressKey]) || validPoint(geocodeCache[key])) { geocodePending.delete(key); return; }
+    delete geocodeCache[addressKey]; delete geocodeCache[key];
     const wait=Math.max(0,1100-(Date.now()-lastGeocodeAt));
     if(wait) await new Promise(resolve=>setTimeout(resolve,wait));
     lastGeocodeAt=Date.now();
     try{
-      const streetAddress=String(address).match(/(?:^|,\s*)(\d+\s+[^,]+,\s*[^,]+,\s*(?:ON|Ontario)\b.*)$/i)?.[1]||address;
+      const streetAddress=canonicalGeocodeAddress(address);
       const url="https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=ca&q="+encodeURIComponent(streetAddress);
-      const response=await fetch(url,{headers:{"Accept":"application/json"}});
-      if(!response.ok) return;
-      const found=await response.json();
+      let found=[];
+      for(let attempt=0;attempt<2;attempt++){
+        const response=await fetch(url,{headers:{"Accept":"application/json"}});
+        if(response.ok){ found=await response.json(); break; }
+        if(attempt===0 && (response.status===429 || response.status>=500)){
+          await new Promise(resolve=>setTimeout(resolve,2500));
+          continue;
+        }
+        break;
+      }
       if(found[0]){
-        geocodeCache[key]=[Number(found[0].lat),Number(found[0].lon)];
+        const point=[Number(found[0].lat),Number(found[0].lon)];
+        if(!validPoint(point)) { geocodePending.delete(key); return; }
+        geocodeCache[addressKey]=point; geocodeCache[key]=point;
         try{ localStorage.setItem(GEOCODE_CACHE_KEY,JSON.stringify(geocodeCache)); }catch(e){}
         if(lastData) drawMap(lastData.results||[]);
       }
     }catch(e){ /* map continues to work when the geocoder is unavailable */ }
+    geocodePending.delete(key);
   });
 }
 
