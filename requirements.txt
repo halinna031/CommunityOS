@@ -1,7 +1,7 @@
-# Core app (FastAPI version)
+# FastAPI version
 fastapi>=0.110
 uvicorn[standard]>=0.29
 
 # Optional
-google-genai>=1.0         # Gemini API for intent parsing / explanation / ingestion
-sentence-transformers>=3   # EMBEDDING_BACKEND=st  (multilingual dense embeddings)
+google-genai>=1.0
+sentence-transformers>=3
